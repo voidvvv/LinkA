@@ -3,13 +3,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Camera.h"
 
-class OrthographicCamera
+class OrthographicCamera : public Camera
 {
 public:
     glm::vec3 worldUp;
     glm::vec3 up;
-    glm::vec3 position;
+
     glm::vec3 direct;
     glm::vec3 right;
 
@@ -17,8 +18,8 @@ public:
 
     OrthographicCamera(const float &width, const float &heigh);
 
-    glm::mat4 getViewMatrix();
-    glm::mat4 getProjectionMatrix();
+    glm::mat4 getViewMatrix() override;
+    glm::mat4 getProjectionMatrix() override;
 
     void update();
 };

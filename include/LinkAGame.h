@@ -23,4 +23,5 @@ public:
     void renderText(std::wstring&, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) override;
     void setScreen(Screen*) override;
     SpriteRender* getSpriteRender() override;
+    void sendEvent(LinkA_Event& event) override;
 };

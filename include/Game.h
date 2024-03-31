@@ -21,4 +21,5 @@ public:
     virtual void update(float& delta) = 0;
     virtual SpriteRender* getSpriteRender() = 0;
     virtual void renderText(std::wstring&, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color ) = 0;
+    virtual void sendEvent(LinkA_Event& event) = 0;
 };

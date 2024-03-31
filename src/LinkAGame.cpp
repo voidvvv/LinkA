@@ -12,6 +12,8 @@ void LinkAGame::create()
     // init asset
     assetManager->loadShader("./shader/simple/simple.vert", "./shader/simple/simple.frag", "simple");
     assetManager->loadShader("./shader/text_simple/text.vert", "./shader/text_simple/text.frag", "textSimple");
+
+
     assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
 
     // load font and glyph
@@ -64,4 +66,9 @@ void LinkAGame::setScreen(Screen* newScn)
 SpriteRender* LinkAGame::getSpriteRender()
 {
     return renderer;
+}
+
+void LinkAGame::sendEvent(LinkA_Event& event)
+{
+    scn->sendEvent(event);
 }

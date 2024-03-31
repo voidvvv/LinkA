@@ -16,7 +16,7 @@ public:
     SpriteRender(ShaderProgram *_shader);
     void DrawSprite(Texture* texture, glm::vec2 position,
                     glm::mat4 projection, glm::mat4 view,
-                    glm::vec2 size = glm::vec2(10, 10), GLfloat rotate = 0.0f,
+                    glm::vec2 size = glm::vec2(0,0), GLfloat rotate = 0.0f,
                     glm::vec3 color = glm::vec3(1.0f));
 };
 

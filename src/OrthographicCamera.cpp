@@ -1,8 +1,9 @@
 #include "OrthographicCamera.h"
 
-OrthographicCamera::OrthographicCamera(const float &width, const float &heigh) : worldUp(0, 1, 0), position(0, 0, 0), direct(0, 0, -1), up(0, 1, 0)
+OrthographicCamera::OrthographicCamera(const float &width, const float &heigh) : worldUp(0, 1, 0), direct(0, 0, -1), up(0, 1, 0)
 {
     projection = glm::ortho(0.0f, width, 0.0f, heigh, -1.0f, 1.0f);
+    this->position = glm::vec3(0,0,0);
     // projection = glm::perspective(glm::radians(45.0f), (float)width/(float)heigh, 0.1f, 100.0f);
 }
 
