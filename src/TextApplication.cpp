@@ -88,37 +88,35 @@ CharacterManager::CharacterManager()
 //     glBindVertexArray(0);
 // }
 
-void CharacterManager::create(std::wstring &text)
+void CharacterManager::create(const char* file)
 {
-    int size = text.size();
 
-    FT_Library ft;
+
+
     camera = new OrthographicCamera(800, 600);
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-    FT_Face face;
-    if (FT_New_Face(ft, "C:/Windows/Fonts/SIMLI.TTF", 0, &face))
+
+    if (FT_New_Face(ft, file, 0, &face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 
 
     // Set size to load glyphs as
-    FT_Set_Pixel_Sizes(face, 0, 20);
+    FT_Set_Pixel_Sizes(face, 0, 45);
     // FT_Select_Charmap(face, ft_encoding_unicode);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    for (int x = 0; x < size; x++)
+    for (int x = 0; x < 128; x++)
     {
-        wchar_t c = text[x];
-        // FT_ULong
-        GLint t = static_cast<GLint>(c);
-        loadCharater(t, face);
+        
+        loadCharater(x, face);
     }
 
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
+    // FT_Done_Face(face);
+    // FT_Done_FreeType(ft);
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
@@ -130,52 +128,13 @@ void CharacterManager::create(std::wstring &text)
     glBindVertexArray(0);
 }
 
-// void CharacterManager::renderText(ShaderProgram *program, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
-// {
-//     // Activate corresponding render state
-//     glEnable(GL_BLEND);
-//     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//     program->use();
-//     glUniform3f(glGetUniformLocation(program->ID, "u_color"), color.x, color.y, color.z);
-//     program->setUniformMat4("projection", camera->projection);
-//     glActiveTexture(GL_TEXTURE0);
-//     glBindVertexArray(VAO);
+void CharacterManager::create()
+{
+// "C:/Windows/Fonts/SIMLI.TTF"
+    create("C:/Windows/Fonts/SIMLI.TTF");
+}
 
-//     // Iterate through all characters
-//     std::string::const_iterator c;
-//     for (c = text.begin(); c != text.end(); c++)
-//     {
-//         Character ch = CharacterCache[*c];
 
-//         GLfloat xpos = x + ch.Bearing.x * scale;
-//         GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-
-//         GLfloat w = ch.Size.x * scale;
-//         GLfloat h = ch.Size.y * scale;
-//         // Update VBO for each character
-//         GLfloat vertices[6][4] = {
-//             {xpos, ypos + h, 0.0, 0.0},
-//             {xpos, ypos, 0.0, 1.0},
-//             {xpos + w, ypos, 1.0, 1.0},
-
-//             {xpos, ypos + h, 0.0, 0.0},
-//             {xpos + w, ypos, 1.0, 1.0},
-//             {xpos + w, ypos + h, 1.0, 0.0}};
-//         // Render glyph texture over quad
-//         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-//         // Update content of VBO memory
-//         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
-//         glBindBuffer(GL_ARRAY_BUFFER, 0);
-//         // Render quad
-//         glDrawArrays(GL_TRIANGLES, 0, 6);
-//         // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-//         x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-//     }
-//     glBindVertexArray(0);
-//     glBindTexture(GL_TEXTURE_2D, 0);
-//     glDisable(GL_BLEND);
-// }
 
 void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, int size, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
@@ -190,6 +149,10 @@ void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, in
 
     for (int i = 0; i < size; i++)
     {
+        GLint s = static_cast<int>(text[i]);
+        if (CharacterCache.find(s) == CharacterCache.end()){
+            loadCharater(s,face);
+        }
         Character ch = CharacterCache[text[i]];
 
         GLfloat xpos = x + ch.Bearing.x * scale;

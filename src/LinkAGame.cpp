@@ -16,9 +16,8 @@ void LinkAGame::create()
 
     assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
 
-    // load font and glyph
-    std::wstring texts = L"abcABC我爱C++++中，真开心哈哈哈";
-    textManager->create(texts);
+    std::wstring ws = L"我爱中华";
+    textManager->create();
 
     renderer = new SpriteRender(assetManager->getShader("simple"));
     renderer->initRenderData();
@@ -30,11 +29,6 @@ InputEvent *LinkAGame::getInputEvent() { return contro; }
 void LinkAGame::render()
 {
     scn->render();
-    std::wstring c = L"abcABC我爱C++++中，真开心哈哈哈";
-
-    // std::string s = "ABCDEFG我爱你";
-    // renderText(,50,50,1,glm::vec3(1,1,1));
-    renderText(c,100,100,1,glm::vec3(1.0,0.5,0.5));
 }
 
 

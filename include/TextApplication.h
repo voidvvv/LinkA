@@ -27,6 +27,8 @@ struct Character
 class CharacterManager
 {
 private:
+    FT_Library ft;
+    FT_Face face;
     GLuint VAO, VBO;
     friend class Game;
     OrthographicCamera *camera;
@@ -36,7 +38,8 @@ public:
     CharacterManager();
     std::map<GLint, Character> CharacterCache;
     // void create(std::string &text);
-    void create(std::wstring &text);
+    void create(const char *file);
+    void create();
     // void renderText(ShaderProgram *program, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
     void renderText(ShaderProgram *program, std::wstring &text, int size, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
 };
