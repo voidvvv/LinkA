@@ -1,27 +1,26 @@
 #include "LinkAGame.h"
 #include "MainScreen.h"
 
-LinkAGame::LinkAGame()
-{
-}
+
 
 void LinkAGame::create()
 {
     contro = new InputEvent();
-    scn = new MainScreen();
     assetManager = new AssetManager();
     textManager = new CharacterManager();
+    
     // init asset
     assetManager->loadShader("./shader/simple/simple.vert", "./shader/simple/simple.frag", "simple");
-    std::cout << " =============== " << std::endl;
     assetManager->loadShader("./shader/text_simple/text.vert", "./shader/text_simple/text.frag", "textSimple");
-
     assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
-    std::wstring c = L"abcABC我爱C+，真开心饕餮哈哈哈";
-    
-    textManager->create(c);
 
-    scn->create();
+    // load font and glyph
+    std::wstring texts = L"abcABC我爱C++++中，真开心哈哈哈";
+    textManager->create(texts);
+
+    renderer = new SpriteRender(assetManager->getShader("simple"));
+    renderer->initRenderData();
+    setScreen(new MainScreen());
 }
 
 InputEvent *LinkAGame::getInputEvent() { return contro; }
@@ -29,7 +28,7 @@ InputEvent *LinkAGame::getInputEvent() { return contro; }
 void LinkAGame::render()
 {
     scn->render();
-    std::wstring c = L"abcABC我爱C++++，真开心哈哈哈";
+    std::wstring c = L"abcABC我爱C++++中，真开心哈哈哈";
 
     // std::string s = "ABCDEFG我爱你";
     // renderText(,50,50,1,glm::vec3(1,1,1));
@@ -50,4 +49,19 @@ AssetManager *LinkAGame::getAssetManager()
 void LinkAGame::renderText(std::wstring& str, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
     textManager->renderText(assetManager->getShader("textSimple"), str,str.size(), x, y, scale, color);
+}
+
+void LinkAGame::setScreen(Screen* newScn)
+{
+    if (this->scn != nullptr){
+        std::cout << scn << std::endl;
+        this->scn->dispose();
+    }
+    this->scn = newScn;
+    newScn->create();
+}
+
+SpriteRender* LinkAGame::getSpriteRender()
+{
+    return renderer;
 }

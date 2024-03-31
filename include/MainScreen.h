@@ -14,16 +14,14 @@ class MainScreen : public Screen
 private:
     Texture* face;
     // test
-    GLuint VAO,VBO;
 
-    float* vertex;
-    GLuint size;
     OrthographicCamera* camera;
 public:
     MainScreen();
     void create();
     void render();
     void update(float delta);
+    void dispose();
 };
 
 #endif // __MAINSCREEN_H__

@@ -45,6 +45,7 @@ void start(Game* __game)
         float cur = glfwGetTime();
         float delta = cur - lastTime;
         game->time = game->time + delta;
+        game->recent_delta = delta;
         game->update(delta);
         game->render();
         lastTime = cur;
