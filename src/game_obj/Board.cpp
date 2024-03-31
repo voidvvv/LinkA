@@ -11,12 +11,12 @@ void Board::create()
 
 Board::render(Camera * camera)
 {
-    // game->getSpriteRender()->DrawSprite(ground,position,camera->getProjectionMatrix(),camera->getViewMatrix(),size);
+
 }
 
 Board::update(float delta)
 {
-    size.x+=(delta*10);
+    
 }
 
 void Board::onEvent(LinkA_Event& e)

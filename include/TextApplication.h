@@ -12,7 +12,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Game.h"
 #include "Shader.h"
 #include "OrthographicCamera.h"
 
@@ -30,7 +29,6 @@ private:
     FT_Library ft;
     FT_Face face;
     GLuint VAO, VBO;
-    friend class Game;
     OrthographicCamera *camera;
     void loadCharater(GLint &ch, FT_Face &face);
 
