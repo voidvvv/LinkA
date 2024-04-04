@@ -13,22 +13,24 @@
 #include "GameObject.h"
 #include "game_obj/Board.h"
 
-
 class MainScreen : public Screen
 {
 private:
-    Texture* face;
-    Board* board;
-    std::vector<GameObject*> objs;
+    GLfloat * pPointDepth = new float(1.f);
+    glm::vec3 tmpV;
+    Texture *face;
+    Board *board;
+    std::vector<GameObject *> objs;
 
-    Camera* camera;
+    Camera *camera;
+
 public:
     MainScreen();
     void create();
     void render();
     void update(float delta);
     void dispose();
-    void sendEvent(LinkA_Event& event);
+    void sendEvent(LinkA_Event &event);
 };
 
 #endif // __MAINSCREEN_H__

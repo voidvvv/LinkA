@@ -9,6 +9,8 @@
 class Game
 {
 public:
+    GLint ScreenWidth;
+    GLint ScreenHeight;
     float time = 0.f;
     float recent_delta = 0.f;
     int status;
@@ -22,4 +24,6 @@ public:
     virtual SpriteRender* getSpriteRender() = 0;
     virtual void renderText(std::wstring&, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color ) = 0;
     virtual void sendEvent(LinkA_Event& event) = 0;
+    virtual void resize(GLint&, GLint&) = 0;
+
 };

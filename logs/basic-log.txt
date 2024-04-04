@@ -1,0 +1,6 @@
+[2024-04-01 22:44:08.361] [basic_logger] [info] This is an async info message 嘿嘿
+[2024-04-01 22:44:08.361] [basic_logger] [info] abc 你好啊
+[2024-04-01 22:44:08.361] [basic_logger] [error] abc 你好啊
+[2024-04-01 22:45:23.448] [basic_logger] [info] This is an async info message 嘿嘿
+[2024-04-01 22:45:23.448] [basic_logger] [info] abc 你好啊
+[2024-04-01 22:45:23.448] [basic_logger] [error] abc 你好啊

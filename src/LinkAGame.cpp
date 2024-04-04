@@ -1,18 +1,15 @@
 #include "LinkAGame.h"
 #include "MainScreen.h"
 
-
-
 void LinkAGame::create()
 {
     contro = new InputEvent();
     assetManager = new AssetManager();
     textManager = new CharacterManager();
-    
+
     // init asset
     assetManager->loadShader("./shader/simple/simple.vert", "./shader/simple/simple.frag", "simple");
     assetManager->loadShader("./shader/text_simple/text.vert", "./shader/text_simple/text.frag", "textSimple");
-
 
     assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
 
@@ -31,9 +28,9 @@ void LinkAGame::render()
     scn->render();
 }
 
-
 void LinkAGame::update(float &delta)
 {
+    contro->update(delta);
     scn->update(delta);
 }
 
@@ -42,14 +39,15 @@ AssetManager *LinkAGame::getAssetManager()
     return this->assetManager;
 }
 
-void LinkAGame::renderText(std::wstring& str, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+void LinkAGame::renderText(std::wstring &str, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
-    textManager->renderText(assetManager->getShader("textSimple"), str,str.size(), x, y, scale, color);
+    textManager->renderText(assetManager->getShader("textSimple"), str, str.size(), x, y, scale, color);
 }
 
-void LinkAGame::setScreen(Screen* newScn)
+void LinkAGame::setScreen(Screen *newScn)
 {
-    if (this->scn != nullptr){
+    if (this->scn != nullptr)
+    {
         std::cout << scn << std::endl;
         this->scn->dispose();
     }
@@ -57,12 +55,18 @@ void LinkAGame::setScreen(Screen* newScn)
     newScn->create();
 }
 
-SpriteRender* LinkAGame::getSpriteRender()
+SpriteRender *LinkAGame::getSpriteRender()
 {
     return renderer;
 }
 
-void LinkAGame::sendEvent(LinkA_Event& event)
+void LinkAGame::sendEvent(LinkA_Event &event)
 {
     scn->sendEvent(event);
+}
+
+void LinkAGame::resize(GLint& w, GLint& h)
+{
+    this->ScreenWidth = w;
+    this->ScreenHeight = h;
 }

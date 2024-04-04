@@ -20,7 +20,7 @@ public:
 
     glm::mat4 getViewMatrix() override;
     glm::mat4 getProjectionMatrix() override;
-
+    virtual glm::vec3 unproject(glm::vec3&) override;
     void update();
 };
 

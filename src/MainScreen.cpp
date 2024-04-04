@@ -1,6 +1,7 @@
 #include "MainScreen.h"
 #include <iostream>
 #include "Game.h"
+#include "game_obj/Card.h"
 
 #include "miscellaneous.h"
 #include "Shader.h"
@@ -19,10 +20,16 @@ void MainScreen::create()
     // face = game->getAssetManager()->getTexture("face");
     game->getAssetManager()->loadTexture("./img/beauti.png", "board");
     game->getAssetManager()->loadTexture("./img/background.jpg", "background");
-
+    game->getAssetManager()->loadTexture("./img/back.png", "back");
+    game->getAssetManager()->loadTexture("./img/card1.png", "card1");
     // 加载数据
     board = new Board();
     board->create();
+
+    GameObject *tst = new Card();
+    tst->create();
+
+    objs.push_back(tst);
 }
 
 void MainScreen::render()
@@ -58,6 +65,17 @@ void MainScreen::dispose()
 
 void MainScreen::sendEvent(LinkA_Event &event)
 {
+    if (isMouse(&event))
+    {
+        
+        glReadPixels(event.pos.x, event.pos.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, pPointDepth);
+        
+        tmpV.x = event.pos.x;
+        tmpV.y = event.pos.y;
+        tmpV.z = *pPointDepth;
+        glm::vec3 worldPos = camera->unproject(this->tmpV);
+        event.world_pos = worldPos;
+    }
     board->onEvent(event);
     for (GameObject *objPtr : objs)
     {

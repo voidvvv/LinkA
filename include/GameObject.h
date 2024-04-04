@@ -3,10 +3,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Game.h"
 
 #include "InputEvent.h"
 
 #include "Camera.h"
+
+extern Game* game;
 // this is the root object for all game obj
 enum GAME_STATUS
 {
@@ -24,8 +27,8 @@ public:
 
     virtual void onEvent(LinkA_Event& __event) = 0;
     virtual void create() = 0;
-    virtual render(Camera *) = 0;
-    virtual update(float delta) = 0;
+    virtual void render(Camera *) = 0;
+    virtual void update(float delta) = 0;
 };
 
 #endif // __GAMEOBJECT_H__
