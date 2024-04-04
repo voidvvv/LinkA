@@ -2,11 +2,11 @@
 #include <iostream>
 #include "Game.h"
 #include "game_obj/Card.h"
+#include <algorithm>
 
 #include "miscellaneous.h"
 #include "Shader.h"
 #include "OrthographicCamera.h"
-#include "GameEvent.h"
 
 extern Game *game;
 
@@ -45,6 +45,10 @@ void MainScreen::create()
         objs.push_back(tst);
     }
     this->updateLayout();
+
+    _CardRecipient *main_recipient = new _CardRecipient();
+    main_recipient->outer = this;
+    events->registListerner(_CARD_SELECTED, main_recipient);
 }
 
 void MainScreen::render()
@@ -117,4 +121,40 @@ void MainScreen::updateLayout()
         objPtr->size.x = cardWidth;
         objPtr->size.y = cardHeight;
     }
+}
+
+bool MainScreen::_CardRecipient::handleMessage(_LinkAMessage &msg)
+{
+    if (msg.messageType != _CARD_SELECTED)
+    {
+        return false;
+    }
+    if (outer->selected.size() > 0)
+    {
+        if (msg.extraInfo && dynamic_cast<Card *>(msg.extraInfo))
+        {
+            Card *selecedCard = outer->selected[0];
+            if (selecedCard->compare_id == dynamic_cast<Card *>(msg.extraInfo)->compare_id)
+            {
+                selecedCard->status = GAME_STATUS::INVALID;
+                dynamic_cast<Card *>(msg.extraInfo)->status = GAME_STATUS::INVALID;
+                // delete selecedCard;
+                // delete msg.extraInfo;
+                // i need a GC
+                msg.extraInfo->delFlag = true;
+                selecedCard->delFlag = true;
+            }
+            else
+            {
+                selecedCard->status = GAME_STATUS::NORMAL;
+                outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
+            }
+        }
+    }
+    else if (dynamic_cast<Card *>(msg.extraInfo))
+    {
+        dynamic_cast<Card *>(msg.extraInfo)->status = Game_obj_status::PICKED;
+        outer->selected.push_back(dynamic_cast<Card *>(msg.extraInfo));
+    }
+    return true;
 }

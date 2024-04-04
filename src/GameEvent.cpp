@@ -5,8 +5,8 @@ bool _LinkAGameEvents::handleMessage(_LinkAMessage &msg)
     return false;
 }
 
-void _LinkAGameEvents::sendMessaage(int messageType, _Recipient *sender, _Recipient *receiver, GameObject *extraInfo, float timestamp,_ReturnReceiptStatus returnReceiptStatus)
-{   
+void _LinkAGameEvents::sendMessaage(int messageType, _Recipient *sender, _Recipient *receiver, GameObject *extraInfo, float timestamp, _ReturnReceiptStatus returnReceiptStatus)
+{
     _LinkAMessage msg;
     msg.messageType = messageType;
     msg.sender = sender;
@@ -19,15 +19,20 @@ void _LinkAGameEvents::sendMessaage(int messageType, _Recipient *sender, _Recipi
 
 void _LinkAGameEvents::sendMessaage(_LinkAMessage &message)
 {
-    if (message.receiver != NULL){
+    if (message.receiver != NULL)
+    {
         message.receiver->handleMessage(message);
-    }else {
+    }
+    else
+    {
         std::vector<_Recipient *> ls = listeners[message.messageType];
-        for (_Recipient * rPtr : ls){
+        for (_Recipient *rPtr : ls)
+        {
             rPtr->handleMessage(message);
         }
     }
-    if (message.sender != NULL &&  message.returnReceiptStatus == _ReturnReceiptStatus::RETURN_RECEIPT_NEEDED){
+    if (message.sender != NULL && message.returnReceiptStatus == _ReturnReceiptStatus::RETURN_RECEIPT_NEEDED)
+    {
         message.receiver = message.sender;
         message.sender = this;
         message.returnReceiptStatus = _ReturnReceiptStatus::RETURN_RECEIPT_SENT;
@@ -38,12 +43,19 @@ void _LinkAGameEvents::sendMessaage(_LinkAMessage &message)
 
 void _LinkAGameEvents::dispose()
 {
-    
-    for (auto it = listeners.begin(); it != listeners.end(); it++){
-        std::vector<_Recipient *> ls =  it->second;
-        for (_Recipient * rPtr: ls){
+
+    for (auto it = listeners.begin(); it != listeners.end(); it++)
+    {
+        std::vector<_Recipient *> ls = it->second;
+        for (_Recipient *rPtr : ls)
+        {
             delete rPtr;
         }
     }
     listeners.clear();
+}
+
+void _LinkAGameEvents::registListerner(int messageType, _Recipient *lsn)
+{
+    listeners[messageType].push_back(lsn);
 }

@@ -9,19 +9,22 @@
 
 #include "Camera.h"
 
+
 extern Game* game;
 // this is the root object for all game obj
-enum GAME_STATUS
+typedef enum GAME_STATUS
 {
     CREATE,
+    PICKED,
     NORMAL,
     INVALID
-};
+} Game_obj_status;
 
 class GameObject
 {
 public:
-    GAME_STATUS status;
+    Game_obj_status status;
+    bool delFlag = false; // wait to be delete as pointer
     glm::vec2 position;
     glm::vec2 size;
 

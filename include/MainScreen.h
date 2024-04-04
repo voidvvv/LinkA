@@ -13,18 +13,17 @@
 #include "GameObject.h"
 #include "game_obj/Board.h"
 #include "game_obj/Card.h"
+#include "GameEvent.h"
 
 class MainScreen : public Screen
 {
 private:
-
-
     GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
     Texture *face;
     Board *board;
     std::vector<Card *> objs;
-
+    std::vector<Card *> selected;
     Camera *camera;
 
     int row = 8;
@@ -37,6 +36,12 @@ private:
     float cardHeight;
 
 public:
+    class _CardRecipient : public _Recipient
+    {
+    public:
+        MainScreen *outer;
+        virtual bool handleMessage(_LinkAMessage &msg);
+    };
     MainScreen();
     void create();
     void render();

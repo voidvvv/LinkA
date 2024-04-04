@@ -45,6 +45,7 @@ public:
                       _ReturnReceiptStatus returnReceiptStatus = _ReturnReceiptStatus::RETURN_RECEIPT_UNNEEDED);
     void sendMessaage(_LinkAMessage &message);
     void dispose();
+    void registListerner(int messageType, _Recipient *);
 };
 
 extern _LinkAGameEvents* events;

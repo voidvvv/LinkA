@@ -9,6 +9,7 @@
 
 #include "LinkAViewPort.h"
 #include "Game.h"
+#include "GameEvent.h"
 
 extern GLFWwindow* window;
 extern Game* game;

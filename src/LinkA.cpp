@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "miscellaneous.h"
 #include "LinkALog.h"
-#include "GameEvent.h"
+
 
 void position_callback(GLFWwindow *window, double xpos, double ypos);
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -12,7 +12,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 GLFWwindow *window;
 Game *game;
 LinKAViewPort *linKA_viewport;
-_LinkAGameEvents* events;
+_LinkAGameEvents *events;
 
 float lastTime;
 
@@ -32,6 +32,8 @@ void start(Game *__game)
 {
     game = __game;
     linKA_viewport = new LinKAViewPort();
+
+    events = new _LinkAGameEvents();
     initLogger();
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -62,7 +64,6 @@ void start(Game *__game)
 
     lastTime = glfwGetTime();
     game->create();
-    events = new _LinkAGameEvents();
     while (!glfwWindowShouldClose(window))
     {
         float cur = glfwGetTime();
