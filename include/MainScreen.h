@@ -12,15 +12,18 @@
 #include "TextApplication.h"
 #include "GameObject.h"
 #include "game_obj/Board.h"
+#include "game_obj/Card.h"
 
 class MainScreen : public Screen
 {
 private:
+
+
     GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
     Texture *face;
     Board *board;
-    std::vector<GameObject *> objs;
+    std::vector<Card *> objs;
 
     Camera *camera;
 

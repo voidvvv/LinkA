@@ -3,16 +3,12 @@
 #include "GameObject.h"
 #include "Texture.h"
 
-enum PULL_STATUS
+ class Card : public GameObject
 {
-    NONE,
-    PULL
-};
-
-class Card : public GameObject
-{
+public:
+    int id;
     Texture *img;
-    PULL_STATUS ps = PULL_STATUS::NONE;
+
     glm::vec2 postion_delta;
     glm::vec3 record_position;
 

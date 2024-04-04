@@ -36,7 +36,7 @@ void MainScreen::create()
     // 10 * 10
     for (int x = 0; x < column * row; x++)
     {
-        GameObject *tst = new Card();
+        Card *tst = new Card();
         tst->create();
         objs.push_back(tst);
     }
@@ -56,7 +56,7 @@ void MainScreen::render()
     // draw board
     board->render(camera);
 
-    for (GameObject *objPtr : objs)
+    for (Card *objPtr : objs)
     {
         objPtr->render(camera);
     }
@@ -65,7 +65,7 @@ void MainScreen::render()
 void MainScreen::update(float delta)
 {
     board->update(delta);
-    for (GameObject *objPtr : objs)
+    for (Card *objPtr : objs)
     {
         objPtr->update(delta);
     }
@@ -89,7 +89,7 @@ void MainScreen::sendEvent(LinkA_Event &event)
         event.world_pos = worldPos;
     }
     board->onEvent(event);
-    for (GameObject *objPtr : objs)
+    for (Card *objPtr : objs)
     {
         if (!event.s)
         {
@@ -102,7 +102,7 @@ void MainScreen::sendEvent(LinkA_Event &event)
 void MainScreen::updateLayout()
 {
     for (int i = 0; i < objs.size() && i < column*row; i++){
-        GameObject* objPtr =  objs[i];
+        Card* objPtr =  objs[i];
         int c_col = i % column;
         int c_row = i/column;
 
