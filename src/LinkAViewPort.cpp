@@ -24,6 +24,6 @@ void LinKAViewPort::apply(GLint x, GLint y,GLsizei w,GLsizei h)
 
 glm::vec4 LinKAViewPort::getV4()
 {
-    std::cout << "viewport: x : " << x << " - y: " << y << " - width: " << width << " - height: " << height << std::endl;
+    // std::cout << "viewport: x : " << x << " - y: " << y << " - width: " << width << " - height: " << height << std::endl;
     return glm::vec4(x,y,width,height);
 }

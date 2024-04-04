@@ -8,7 +8,7 @@ uniform mat4 view;
 uniform mat4 model;
 
 void main () {
-    gl_Position =projection *  view *  model * vec4(aPos.xy,1.f,1.0f);
+    gl_Position =projection *  view *  model * vec4(aPos.xy,0.f,1.0f);
 
     TexCoord = aPos.zw;
 }

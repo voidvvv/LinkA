@@ -14,6 +14,7 @@ class Card : public GameObject
     Texture *img;
     PULL_STATUS ps = PULL_STATUS::NONE;
     glm::vec2 postion_delta;
+    glm::vec3 record_position;
 
     virtual void onEvent(LinkA_Event &__event);
     virtual void create();

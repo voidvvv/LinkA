@@ -16,13 +16,22 @@
 class MainScreen : public Screen
 {
 private:
-    GLfloat * pPointDepth = new float(1.f);
+    GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
     Texture *face;
     Board *board;
     std::vector<GameObject *> objs;
 
     Camera *camera;
+
+    int row = 8;
+    int column = 8;
+
+    glm::vec3 cardsOrigin;
+    float cardGapx;
+    float cardGapy;
+    float cardWidth;
+    float cardHeight;
 
 public:
     MainScreen();
@@ -31,6 +40,7 @@ public:
     void update(float delta);
     void dispose();
     void sendEvent(LinkA_Event &event);
+    void updateLayout();
 };
 
 #endif // __MAINSCREEN_H__

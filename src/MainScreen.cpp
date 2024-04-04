@@ -15,6 +15,13 @@ MainScreen::MainScreen()
 
 void MainScreen::create()
 {
+    // 初始化一些数据
+    cardGapx = 5.f;
+    cardGapy = 5.f;
+    cardWidth = 50.f;
+    cardHeight = 50.f;
+    cardsOrigin.x = 275;
+    cardsOrigin.y = 50;
     // 加载资源
     camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGH);
     // face = game->getAssetManager()->getTexture("face");
@@ -26,10 +33,14 @@ void MainScreen::create()
     board = new Board();
     board->create();
 
-    GameObject *tst = new Card();
-    tst->create();
-
-    objs.push_back(tst);
+    // 10 * 10
+    for (int x = 0; x < column * row; x++)
+    {
+        GameObject *tst = new Card();
+        tst->create();
+        objs.push_back(tst);
+    }
+    this->updateLayout();
 }
 
 void MainScreen::render()
@@ -44,6 +55,7 @@ void MainScreen::render()
 
     // draw board
     board->render(camera);
+
     for (GameObject *objPtr : objs)
     {
         objPtr->render(camera);
@@ -67,12 +79,12 @@ void MainScreen::sendEvent(LinkA_Event &event)
 {
     if (isMouse(&event))
     {
-        
-        glReadPixels(event.pos.x, event.pos.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, pPointDepth);
-        
+
+        // glReadPixels(event.pos.x, event.pos.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, pPointDepth);
+
         tmpV.x = event.pos.x;
         tmpV.y = event.pos.y;
-        tmpV.z = *pPointDepth;
+        tmpV.z = 0.f;
         glm::vec3 worldPos = camera->unproject(this->tmpV);
         event.world_pos = worldPos;
     }
@@ -84,5 +96,20 @@ void MainScreen::sendEvent(LinkA_Event &event)
             break;
         }
         objPtr->onEvent(event);
+    }
+}
+
+void MainScreen::updateLayout()
+{
+    for (int i = 0; i < objs.size() && i < column*row; i++){
+        GameObject* objPtr =  objs[i];
+        int c_col = i % column;
+        int c_row = i/column;
+
+        objPtr->position.x = cardGapx*(c_col+1) + cardWidth*c_col +cardsOrigin.x;
+        objPtr->position.y = cardGapy*(c_row+1) + c_row * cardHeight + cardsOrigin.y;
+
+        objPtr->size.x = cardWidth;
+        objPtr->size.y = cardHeight;
     }
 }

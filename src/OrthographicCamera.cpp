@@ -23,10 +23,11 @@ glm::mat4 OrthographicCamera::getProjectionMatrix()
 
 glm::vec3 OrthographicCamera::unproject(glm::vec3 &screenPos)
 {
-    std::cout << "screen pos: x: " << screenPos.x << " = y: " << screenPos.y << "  = z: " << screenPos.z << std::endl;
+    // std::cout << "screen pos: x: " << screenPos.x << " = y: " << screenPos.y << "  = z: " << screenPos.z << std::endl;
 
     this->tmpV = glm::unProject(screenPos, getViewMatrix(), getProjectionMatrix(), linKA_viewport->getV4());
-    std::cout << "worldPos : x: " << tmpV.x << " = y: " << tmpV.y << std::endl;
+    // glm::project
+    // std::cout << "worldPos : x: " << tmpV.x << " = y: " << tmpV.y << std::endl;
 
     return tmpV;
 }

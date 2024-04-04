@@ -62,6 +62,7 @@ void InputEvent::sendMouseEvent(LinkA_EventType eventType, int button, int mods)
         e.pos = this->pos;
         e.mouseButton = button;
         e.mods = mods;
+        e.s = true;
         game->sendEvent(e);
         cache.push_back(e);
     }
