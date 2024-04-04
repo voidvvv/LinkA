@@ -6,6 +6,7 @@
 #include "miscellaneous.h"
 #include "Shader.h"
 #include "OrthographicCamera.h"
+#include "GameEvent.h"
 
 extern Game *game;
 
@@ -15,6 +16,7 @@ MainScreen::MainScreen()
 
 void MainScreen::create()
 {
+    // events->dispose();
     // 初始化一些数据
     cardGapx = 5.f;
     cardGapy = 5.f;
@@ -37,7 +39,9 @@ void MainScreen::create()
     for (int x = 0; x < column * row; x++)
     {
         Card *tst = new Card();
+        tst->compare_id = 1;
         tst->create();
+
         objs.push_back(tst);
     }
     this->updateLayout();
@@ -101,13 +105,14 @@ void MainScreen::sendEvent(LinkA_Event &event)
 
 void MainScreen::updateLayout()
 {
-    for (int i = 0; i < objs.size() && i < column*row; i++){
-        Card* objPtr =  objs[i];
+    for (int i = 0; i < objs.size() && i < column * row; i++)
+    {
+        Card *objPtr = objs[i];
         int c_col = i % column;
-        int c_row = i/column;
+        int c_row = i / column;
 
-        objPtr->position.x = cardGapx*(c_col+1) + cardWidth*c_col +cardsOrigin.x;
-        objPtr->position.y = cardGapy*(c_row+1) + c_row * cardHeight + cardsOrigin.y;
+        objPtr->position.x = cardGapx * (c_col + 1) + cardWidth * c_col + cardsOrigin.x;
+        objPtr->position.y = cardGapy * (c_row + 1) + c_row * cardHeight + cardsOrigin.y;
 
         objPtr->size.x = cardWidth;
         objPtr->size.y = cardHeight;

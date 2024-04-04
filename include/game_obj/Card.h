@@ -3,19 +3,19 @@
 #include "GameObject.h"
 #include "Texture.h"
 
- class Card : public GameObject
+class Card : public GameObject
 {
 public:
-    int id;
-    Texture *img;
+  int compare_id;
+  Texture *img;
 
-    glm::vec2 postion_delta;
-    glm::vec3 record_position;
+  glm::vec2 postion_delta;
+  glm::vec3 record_position;
 
-    virtual void onEvent(LinkA_Event &__event);
-    virtual void create();
-    virtual void render(Camera *);
-    virtual void update(float delta);
+  virtual void onEvent(LinkA_Event &__event);
+  virtual void create();
+  virtual void render(Camera *);
+  virtual void update(float delta);
 };
 
 #endif // __CARD_H__

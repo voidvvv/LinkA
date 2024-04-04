@@ -1,6 +1,6 @@
 #include "game_obj/Card.h"
 #include "ObjUtil.h"
-#include <thread>
+#include <iostream>
 
 void Card::onEvent(LinkA_Event &event)
 {
@@ -8,6 +8,8 @@ void Card::onEvent(LinkA_Event &event)
     {
         if (contain(this, event))
         {
+            // send message
+
         }
         else
         {
@@ -23,8 +25,11 @@ void Card::onEvent(LinkA_Event &event)
 
 void Card::create()
 {
+    std::stringstream ss ;
+    ss << "card"<< compare_id;
+
     // init img
-    img = game->getAssetManager()->getTexture("card1");
+    img = game->getAssetManager()->getTexture(ss.str());
     size = glm::vec2(50, 50);
 }
 
