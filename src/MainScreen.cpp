@@ -31,6 +31,7 @@ void MainScreen::create()
     game->getAssetManager()->loadTexture("./img/background.jpg", "background");
     game->getAssetManager()->loadTexture("./img/back.png", "back");
     game->getAssetManager()->loadTexture("./img/card1.png", "card1");
+    game->getAssetManager()->loadTexture("./img/card2.png", "card2");
     // 加载数据
     board = new Board();
     board->create();
@@ -40,6 +41,9 @@ void MainScreen::create()
     {
         Card *tst = new Card();
         tst->compare_id = 1;
+        if (x%2==1){
+            tst->compare_id = 2;
+        }
         tst->create();
 
         objs.push_back(tst);
@@ -73,9 +77,22 @@ void MainScreen::render()
 void MainScreen::update(float delta)
 {
     board->update(delta);
-    for (Card *objPtr : objs)
+
+    for (auto it = objs.begin(); it != objs.end();)
     {
-        objPtr->update(delta);
+        Card *objPtr = (*it);
+        if (objPtr->delFlag)
+        { 
+            it = objs.erase(it);
+            delete objPtr;
+            objPtr = NULL;
+        }
+        else
+        {
+            objPtr->update(delta);
+            it++;
+        }
+        
     }
 }
 
@@ -131,10 +148,10 @@ bool MainScreen::_CardRecipient::handleMessage(_LinkAMessage &msg)
     }
     if (outer->selected.size() > 0)
     {
-        if (msg.extraInfo && dynamic_cast<Card *>(msg.extraInfo))
+        if (msg.extraInfo && dynamic_cast<Card *>(msg.extraInfo) )
         {
             Card *selecedCard = outer->selected[0];
-            if (selecedCard->compare_id == dynamic_cast<Card *>(msg.extraInfo)->compare_id)
+            if (msg.extraInfo != selecedCard && selecedCard->compare_id == dynamic_cast<Card *>(msg.extraInfo)->compare_id)
             {
                 selecedCard->status = GAME_STATUS::INVALID;
                 dynamic_cast<Card *>(msg.extraInfo)->status = GAME_STATUS::INVALID;
@@ -147,8 +164,8 @@ bool MainScreen::_CardRecipient::handleMessage(_LinkAMessage &msg)
             else
             {
                 selecedCard->status = GAME_STATUS::NORMAL;
-                outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
             }
+            outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
         }
     }
     else if (dynamic_cast<Card *>(msg.extraInfo))

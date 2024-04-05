@@ -20,7 +20,7 @@ class MainScreen : public Screen
 private:
     GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
-    Texture *face;
+    
     Board *board;
     std::vector<Card *> objs;
     std::vector<Card *> selected;
