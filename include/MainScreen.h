@@ -20,20 +20,10 @@ class MainScreen : public Screen
 private:
     GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
-    
-    Board *board;
-    std::vector<Card *> objs;
-    std::vector<Card *> selected;
     Camera *camera;
+    Board *board;
 
-    int row = 8;
-    int column = 8;
 
-    glm::vec3 cardsOrigin;
-    float cardGapx;
-    float cardGapy;
-    float cardWidth;
-    float cardHeight;
 
 public:
     class _CardRecipient : public _Recipient
@@ -48,7 +38,7 @@ public:
     void update(float delta);
     void dispose();
     void sendEvent(LinkA_Event &event);
-    void updateLayout();
+
 };
 
 #endif // __MAINSCREEN_H__
