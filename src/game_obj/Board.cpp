@@ -3,11 +3,13 @@
 
 extern Game *game;
 
-float Game_Heuristic (Card*,Card*) {
+float Game_Heuristic(Card *, Card *)
+{
     return 1.f;
 }
 
-bool Game_ShouldStop (Card* a,Card* b) {
+bool Game_ShouldStop(Card *a, Card *b)
+{
     return a == b;
 }
 
@@ -35,8 +37,8 @@ void Board::create()
     for (int x = 0; x < column * row; x++)
     {
         Card *tst = new Card();
-        int x_pos = x / row;
-        int y_pos = x % row;
+        int x_pos = x % column;
+        int y_pos = x / column;
         tst->x = x_pos;
         tst->y = y_pos;
         tst->index = x;
@@ -162,30 +164,37 @@ bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
     CardInfo *cardInfo = NULL;
     if (outer->selected.size() > 0)
     {
+        std::shared_ptr<Card> selecedCard = outer->selected[0];
+        outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
+
         if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))
         {
             std::shared_ptr<Card> extraCard = outer->findCardPtrByInfo(cardInfo);
-            std::shared_ptr<Card> selecedCard = outer->selected[0];
             if (extraCard.get() != selecedCard.get() && selecedCard.get()->compare_id == extraCard.get()->compare_id)
             {
                 // check type success
                 std::vector<Card *> outPath;
-                bool b = outer->pathFinder->searchNodePath(extraCard.get(),selecedCard.get(),Game_Heuristic,Game_ShouldStop,outPath);
-                std::cout << "A: X - [" << extraCard.get()->x << "]  Y - [" << extraCard.get()->y << "]  B: x - [" << selecedCard.get()->x << "]   y- [" << selecedCard.get()->y << "] reseult: " << b << std::endl; 
-                // selecedCard.get()->status = GAME_STATUS::INVALID;
-                // extraCard.get()->status = GAME_STATUS::INVALID;
-                // delete selecedCard;
-                // delete msg.extraInfo;
-                // i need a GC
-                events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, extraCard.get(), outer);
-                events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, selecedCard.get(), outer);
+                bool b = outer->pathFinder->searchNodePath(extraCard.get(), selecedCard.get(), Game_Heuristic, Game_ShouldStop, outPath);
+                std::cout << "A: X - [" << extraCard.get()->x << "]  Y - [" << extraCard.get()->y << "]  B: x - [" << selecedCard.get()->x << "]   y- [" << selecedCard.get()->y << "] reseult: " << b << std::endl;
 
-                outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
+                if (b)
+                {
+                    events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, extraCard.get(), outer);
+                    events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, selecedCard.get(), outer);
+                }
+                else
+                {
+                    selecedCard.get()->status = GAME_STATUS::NORMAL;
+                    extraCard.get()->status = Game_obj_status::PICKED;
+                    outer->selected.push_back(extraCard);
+                }
             }
-            selecedCard.get()->status = GAME_STATUS::NORMAL;
-            extraCard.get()->status = Game_obj_status::PICKED;
-            outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
-            outer->selected.push_back(extraCard);
+            else
+            {
+                selecedCard.get()->status = GAME_STATUS::NORMAL;
+                extraCard.get()->status = Game_obj_status::PICKED;
+                outer->selected.push_back(extraCard);
+            }
         }
     }
     else if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))

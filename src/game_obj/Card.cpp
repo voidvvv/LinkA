@@ -34,6 +34,7 @@ void Card::create()
     img = game->getAssetManager()->getTexture(ss.str());
     size = glm::vec2(50, 50);
     updateInfo();
+    events->registListerner(_CARD_SUCCESS_MATCH,this);
 }
 
 void Card::updateInfo()
@@ -79,7 +80,7 @@ std::vector<Connection<Card> *> Card::getAllTargetValidConnection(Card *target)
     validConnections.clear();
     for (int x = 0; x < connections.size(); x++)
     {
-        if ((connections[x]->getToNode() == target) || (connections[x]->getFromNode()->nodeStatus == LinkANodeValid::NODE_VALID && connections[x]->getToNode()->nodeStatus == LinkANodeValid::NODE_INVALID))
+        if ((connections[x]->getToNode() == target) || (connections[x]->getToNode()->nodeStatus == LinkANodeValid::NODE_INVALID))
             validConnections.push_back(connections[x]);
     }
     return validConnections;
@@ -94,7 +95,9 @@ void CardInfo::update(float delta){};
 // recipient
 bool Card::handleMessage(_LinkAMessage &msg){
     if (msg.messageType == _CARD_SUCCESS_MATCH) {
-        
+        std::cout << "invalid" << std::endl;
+        this->status = Game_obj_status::INVALID;
+        this->nodeStatus = LinkANodeValid::NODE_INVALID;
     }
 };
 

@@ -7,7 +7,7 @@
 #include "GameObject.h"
 
 #define _CARD_SELECTED 1
-#define _CARD_SUCCESS_MATCH 1
+#define _CARD_SUCCESS_MATCH 2
 
 
 enum _ReturnReceiptStatus

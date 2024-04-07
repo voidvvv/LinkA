@@ -21,6 +21,7 @@ void _LinkAGameEvents::sendMessaage(_LinkAMessage &message)
 {
     if (message.receiver != NULL)
     {
+        std::cout << "message send to target receiver" << std::endl;
         message.receiver->handleMessage(message);
     }
     else
