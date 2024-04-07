@@ -16,6 +16,7 @@ class Graph
 {
 public:
     virtual std::vector<Connection<N> *> getConnections(N *fromNode) = 0;
+    virtual std::vector<Connection<N> *> getConnections(N *fromNode, N* matchNode) = 0;
     virtual int getIndex(N *node) = 0;
     virtual int size() = 0;
 };

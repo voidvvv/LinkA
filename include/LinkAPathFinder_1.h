@@ -2,14 +2,30 @@
 #define __LINKAPATHFINDER_1_H__
 
 #include "AStar.h"
+#include "GameObject.h"
+#include <memory>
 
+enum LinkANodeType
+{
+    CARD,
+    OBSTACLE
+};
+
+enum LinkANodeValid
+{
+    NODE_VALID,
+    NODE_INVALID
+};
 class LinkANode
 {
 public:
     int x;
     int y;
     int index;
-    std::vector<Connection<LinkANode> *> connections;
+    LinkANodeType nodeType;
+    LinkANodeValid nodeStatus;
+    std::shared_ptr<GameObject> obj;
+    virtual std::vector<Connection<LinkANode> *> getAllValidConnection() = 0;
 };
 
 class LinkAConnection : public Connection<LinkANode>
@@ -28,10 +44,12 @@ class LinkAGraph : public Graph<LinkANode>
 {
 private:
     const std::vector<Connection<LinkANode> *> emptyConnections;
-    std::vector<LinkANode *> nodeVector;
 
 public:
+    std::vector<LinkANode *> nodeVector;
+    void create();
     std::vector<Connection<LinkANode> *> getConnections(LinkANode *fromNode);
+    std::vector<Connection<LinkANode> *> getConnections(LinkANode *fromNode, LinkANode *matchNode);
     int getIndex(LinkANode *node);
     int size();
 };

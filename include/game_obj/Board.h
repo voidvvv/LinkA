@@ -5,12 +5,21 @@
 #include "Game.h"
 #include "game_obj/Card.h"
 #include "GameEvent.h"
+#include "LinkAFinder.h"
+#include "AStarPathFinder.hpp"
+#include <memory>
+#include <map>
 
 class Board : public GameObject
 {
+private:
+    std::map<void*,std::shared_ptr<Card>> ptrMapping;
 public:
-    std::vector<Card *> objs;
-    std::vector<Card *> selected;
+    AStarPathFinder<Card>* pathFinder;
+    LinkCardAGraph* graph;
+
+    std::vector<std::shared_ptr<Card>> objs;
+    std::vector<std::shared_ptr<Card>> selected;
 
     int row = 8;
     int column = 8;
@@ -33,6 +42,7 @@ public:
     virtual void update(float delta) override;
     virtual void onEvent(LinkA_Event &__event) override;
     virtual void updateLayout();
+    virtual std::shared_ptr<Card> findCardPtrByInfo(CardInfo *ci);
     void dispose();
 };
 

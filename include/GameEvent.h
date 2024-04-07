@@ -2,10 +2,13 @@
 #define __GAMEEVENT_H__
 #include <map>
 #include <vector>
+#include <memory>
 
 #include "GameObject.h"
 
 #define _CARD_SELECTED 1
+#define _CARD_SUCCESS_MATCH 1
+
 
 enum _ReturnReceiptStatus
 {
@@ -28,7 +31,7 @@ public:
     int messageType;
     float timestamp;
     _ReturnReceiptStatus returnReceiptStatus;
-    GameObject *extraInfo;
+    GameObject* extraInfo;
 };
 
 class _LinkAGameEvents : public _Recipient

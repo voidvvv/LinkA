@@ -23,8 +23,15 @@ std::vector<Connection<LinkANode> *> LinkAGraph::getConnections(LinkANode *fromN
     if (it == this->nodeVector.end()){
         return emptyConnections;
     }
-    return (*it)->connections;
+    return (*it)->getAllValidConnection();
 }
+
+// std::vector<Connection<N> *> getConnections(N *fromNode, N* matchNode)
+std::vector<Connection<LinkANode> *> LinkAGraph::getConnections(LinkANode *fromNode, LinkANode *matchNode)
+{
+    return getConnections(fromNode);
+}
+
 
 int LinkAGraph::getIndex(LinkANode *node)
 {
@@ -33,4 +40,8 @@ int LinkAGraph::getIndex(LinkANode *node)
 int LinkAGraph::size()
 {
     return this->nodeVector.size();
+};
+
+void LinkAGraph::create(){
+    this->nodeVector.clear();
 };

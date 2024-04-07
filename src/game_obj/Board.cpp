@@ -1,51 +1,71 @@
 #include "game_obj/Board.h"
 #include "LinkALog.h"
 
-
 extern Game *game;
+
+float Game_Heuristic (Card*,Card*) {
+    return 1.f;
+}
+
+bool Game_ShouldStop (Card* a,Card* b) {
+    return a == b;
+}
 
 void Board::create()
 {
+    int scale = 2;
     // 初始化一些数据
-    cardGapx = 5.f;
-    cardGapy = 5.f;
-    cardWidth = 50.f;
-    cardHeight = 50.f;
+    cardGapx = 5.f / scale;
+    cardGapy = 5.f / scale;
+    cardWidth = 50.f / scale;
+    cardHeight = 50.f / scale;
+
+    this->column *= scale;
+    this->row *= scale;
+
     cardsOrigin.x = 275;
     cardsOrigin.y = 50;
     ground = game->getAssetManager()->getTexture("back");
     position = glm::vec2(250, 25);
     size = glm::vec2(500, 500.f);
 
-    // 10 * 10
+    pathFinder = new AStarPathFinder<Card>();
+    graph = new LinkCardAGraph();
+    graph->create();
     for (int x = 0; x < column * row; x++)
     {
         Card *tst = new Card();
+        int x_pos = x / row;
+        int y_pos = x % row;
+        tst->x = x_pos;
+        tst->y = y_pos;
+        tst->index = x;
         tst->compare_id = 1;
         if (x % 2 == 1)
         {
             tst->compare_id = 2;
         }
         tst->create();
-
-        objs.push_back(tst);
+        std::shared_ptr<Card> ptr(tst);
+        ptrMapping[tst] = ptr;
+        objs.push_back(ptr);
+        this->graph->nodeVector.push_back(tst);
     }
+
     this->updateLayout();
-
-        BaseBoard_CardRecipient *main_recipient = new BaseBoard_CardRecipient();
+    pathFinder->init(graph);
+    BaseBoard_CardRecipient *main_recipient = new BaseBoard_CardRecipient();
     main_recipient->outer = this;
-    // auto s= main_recipient::handleMessage;
     events->registListerner(_CARD_SELECTED, main_recipient);
-
 }
 
 void Board::render(Camera *camera)
 {
     game->getSpriteRender()->DrawSprite(ground, position, camera->getProjectionMatrix(), camera->getViewMatrix(), size);
 
-    for (Card *objPtr : objs)
+    for (std::shared_ptr<Card> objPtr : objs)
     {
-        objPtr->render(camera);
+        objPtr.get()->render(camera);
     }
 }
 
@@ -53,16 +73,15 @@ void Board::update(float delta)
 {
     for (auto it = objs.begin(); it != objs.end();)
     {
-        Card *objPtr = (*it);
-        if (objPtr->delFlag)
+        std::shared_ptr<Card> objPtr = (*it);
+        if (objPtr.get()->delFlag)
         {
             it = objs.erase(it);
-            delete objPtr;
-            objPtr = NULL;
+            objPtr.reset();
         }
         else
         {
-            objPtr->update(delta);
+            objPtr.get()->update(delta);
             it++;
         }
     }
@@ -78,32 +97,61 @@ void Board::onEvent(LinkA_Event &event)
         // }
     }
 
-    for (Card *objPtr : objs)
+    for (std::shared_ptr<Card> objPtr : objs)
     {
         if (!event.s)
         {
             break;
         }
-        objPtr->onEvent(event);
+        objPtr.get()->onEvent(event);
     }
+}
+
+void addConnection(Card *from, Card *to)
+{
+    LinkACardConnection *conPtr = new LinkACardConnection();
+    conPtr->fromNode = from;
+    conPtr->toNode = to;
+    from->connections.push_back(conPtr);
 }
 
 void Board::updateLayout()
 {
     for (int i = 0; i < objs.size() && i < column * row; i++)
     {
-        Card *objPtr = objs[i];
+        std::shared_ptr<Card> objPtr = objs[i];
         int c_col = i % column;
         int c_row = i / column;
 
-        objPtr->position.x = cardGapx * (c_col + 1) + cardWidth * c_col + cardsOrigin.x;
-        objPtr->position.y = cardGapy * (c_row + 1) + c_row * cardHeight + cardsOrigin.y;
+        objPtr.get()->position.x = cardGapx * (c_col + 1) + cardWidth * c_col + cardsOrigin.x;
+        objPtr.get()->position.y = cardGapy * (c_row + 1) + c_row * cardHeight + cardsOrigin.y;
 
-        objPtr->size.x = cardWidth;
-        objPtr->size.y = cardHeight;
+        objPtr.get()->size.x = cardWidth;
+        objPtr.get()->size.y = cardHeight;
+
+        if (c_col + 1 < column)
+        {
+            addConnection(objPtr.get(), objs[i + 1].get());
+        }
+        if (c_col - 1 >= 0)
+        {
+            addConnection(objPtr.get(), objs[i - 1].get());
+        }
+        if (c_row + 1 < row)
+        {
+            addConnection(objPtr.get(), objs[i + column].get());
+        }
+        if (c_row - 1 >= 0)
+        {
+            addConnection(objPtr.get(), objs[i - column].get());
+        }
     }
 }
 
+std::shared_ptr<Card> Board::findCardPtrByInfo(CardInfo *ci)
+{
+    return ptrMapping[ci->cPtr];
+}
 
 bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
 {
@@ -111,34 +159,50 @@ bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
     {
         return false;
     }
+    CardInfo *cardInfo = NULL;
     if (outer->selected.size() > 0)
     {
-        if (msg.extraInfo && dynamic_cast<Card *>(msg.extraInfo) )
+        if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))
         {
-            Card *selecedCard = outer->selected[0];
-            if (msg.extraInfo != selecedCard && selecedCard->compare_id == dynamic_cast<Card *>(msg.extraInfo)->compare_id)
+            std::shared_ptr<Card> extraCard = outer->findCardPtrByInfo(cardInfo);
+            std::shared_ptr<Card> selecedCard = outer->selected[0];
+            if (extraCard.get() != selecedCard.get() && selecedCard.get()->compare_id == extraCard.get()->compare_id)
             {
-                selecedCard->status = GAME_STATUS::INVALID;
-                dynamic_cast<Card *>(msg.extraInfo)->status = GAME_STATUS::INVALID;
+                // check type success
+                std::vector<Card *> outPath;
+                bool b = outer->pathFinder->searchNodePath(extraCard.get(),selecedCard.get(),Game_Heuristic,Game_ShouldStop,outPath);
+                std::cout << "A: X - [" << extraCard.get()->x << "]  Y - [" << extraCard.get()->y << "]  B: x - [" << selecedCard.get()->x << "]   y- [" << selecedCard.get()->y << "] reseult: " << b << std::endl; 
+                // selecedCard.get()->status = GAME_STATUS::INVALID;
+                // extraCard.get()->status = GAME_STATUS::INVALID;
                 // delete selecedCard;
                 // delete msg.extraInfo;
                 // i need a GC
-                msg.extraInfo->delFlag = true;
-                selecedCard->delFlag = true;
+                events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, extraCard.get(), outer);
+                events->sendMessaage(_CARD_SUCCESS_MATCH, NULL, selecedCard.get(), outer);
+
+                outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
             }
-            else
-            {
-                selecedCard->status = GAME_STATUS::NORMAL;
-            }
+            selecedCard.get()->status = GAME_STATUS::NORMAL;
+            extraCard.get()->status = Game_obj_status::PICKED;
             outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
+            outer->selected.push_back(extraCard);
         }
     }
-    else if (dynamic_cast<Card *>(msg.extraInfo))
+    else if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))
     {
-        dynamic_cast<Card *>(msg.extraInfo)->status = Game_obj_status::PICKED;
-        outer->selected.push_back(dynamic_cast<Card *>(msg.extraInfo));
+        std::shared_ptr<Card> extraCard = outer->findCardPtrByInfo(cardInfo);
+
+        extraCard.get()->status = Game_obj_status::PICKED;
+        outer->selected.push_back(extraCard);
     }
     return true;
 }
 
-void Board::dispose() {}
+void Board::dispose()
+{
+    for (auto it = ptrMapping.begin(); it != ptrMapping.end(); it++)
+    {
+        it->second.reset();
+    }
+    ptrMapping.clear();
+}

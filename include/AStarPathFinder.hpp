@@ -20,13 +20,21 @@ public:
         Graph<N> *gp = graph.get();
         int index = gp->getIndex(node);
         NodeRecord<N> *nodeRecord = records[index];
-        if (nodeRecord.searchId != this->searchId)
+        if (nodeRecord == NULL)
         {
-            nodeRecord.searchId = this->searchId;
+            nodeRecord = new NodeRecord<N>();
+            nodeRecord->category = Node_Category::UNVISITED;
+            nodeRecord->searchId = this->searchId;
+            nodeRecord->connection = NULL;
+            records[index] = nodeRecord;
+        }
+        if (nodeRecord->searchId != this->searchId)
+        {
+            nodeRecord->searchId = this->searchId;
             nodeRecord->connection = NULL;
             nodeRecord->category = Node_Category::UNVISITED;
         }
-        nodeRecord.node = &node;
+        nodeRecord->node = node;
         return nodeRecord;
     }
 
@@ -40,7 +48,8 @@ public:
     void generateNodePath(N *startNode, std::vector<N *> &outPath) override
     {
         // todo
-        while (current && current->connection){
+        while (current && current->connection)
+        {
             outPath.push_back(current->node);
             // current->connection->getFromNode
             Graph<N> *gp = graph.get();
@@ -53,7 +62,7 @@ public:
     {
         Graph<N> *graphPtr = this->graph.get();
 
-        std::vector<Connection<N> *> connections = graphPtr->getConnections(current->node);
+        std::vector<Connection<N> *> connections = graphPtr->getConnections(current->node,end);
 
         for (int x = 0; x < connections.size(); x++)
         {
@@ -62,6 +71,16 @@ public:
             float nodeCost = current->costSoFar + con->getCost();
 
             NodeRecord<N> *nrNode = getNodeRecord(toNode);
+
+            if (toNode == end)
+            {
+                nrNode->costSoFar = nodeCost;
+                nrNode->connection = con;
+
+                nrNode->category = Node_Category::OPEN;
+                openList.push_back(nrNode);
+                return;
+            }
 
             if (nrNode->category == Node_Category::CLOSE && nrNode->costSoFar <= nodeCost)
             {
@@ -73,7 +92,7 @@ public:
                 {
                     continue;
                 }
-                openList.erase(std::find(openList.begin(),openList.end(),nrNode));
+                openList.erase(std::find(openList.begin(), openList.end(), nrNode));
             }
 
             nrNode->costSoFar = nodeCost;
@@ -86,14 +105,14 @@ public:
 
     bool searchNodePath(N *startNode, N *endNode,
                         float (*_Heuristic)(N *, N *),
-                        bool (*_shouldStop)(N*,N*),
+                        bool (*_shouldStop)(N *, N *),
                         std::vector<N *> &outPath) override
     {
         this->current = NULL;
         std::vector<NodeRecord<N> *> openList;
         this->searchId++;
         NodeRecord<N> *nr = getNodeRecord(startNode);
-        nr.category = Node_Category::OPEN;
+        nr->category = Node_Category::OPEN;
         nr->connection = NULL;
         openList.push_back(nr);
 
@@ -103,12 +122,12 @@ public:
             openList.pop_back();
             this->current->category = Node_Category::CLOSE;
 
-            if (_shouldStop(this->current, endNode))
+            if (_shouldStop(this->current->node, endNode))
             {
                 generateNodePath(startNode, outPath);
                 return true;
             }
-            visitChild(endNode,_Heuristic,openList);
+            visitChild(endNode, _Heuristic, openList);
         }
         return false;
     }

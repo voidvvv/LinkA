@@ -28,6 +28,9 @@ public:
     glm::vec2 position;
     glm::vec2 size;
 
+    /*
+        input event
+    */
     virtual void onEvent(LinkA_Event& __event) = 0;
     virtual void create() = 0;
     virtual void render(Camera *) = 0;
