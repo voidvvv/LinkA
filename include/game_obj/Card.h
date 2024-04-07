@@ -13,6 +13,7 @@ public:
   int compare_id;
   int x;
   int y;
+  LinkANodeType nodeType;
   Card *cPtr;
 
   virtual void onEvent(LinkA_Event &__event);

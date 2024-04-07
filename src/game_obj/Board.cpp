@@ -47,6 +47,9 @@ void Board::create()
         {
             tst->compare_id = 2;
         }
+        if (x_pos == y_pos){
+            tst->nodeType = LinkANodeType::OBSTACLE;
+        }
         tst->create();
         std::shared_ptr<Card> ptr(tst);
         ptrMapping[tst] = ptr;
@@ -167,7 +170,7 @@ bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
         std::shared_ptr<Card> selecedCard = outer->selected[0];
         outer->selected.erase(std::remove(outer->selected.begin(), outer->selected.end(), selecedCard), outer->selected.end());
 
-        if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))
+        if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)) && cardInfo->nodeType == LinkANodeType::CARD)
         {
             std::shared_ptr<Card> extraCard = outer->findCardPtrByInfo(cardInfo);
             if (extraCard.get() != selecedCard.get() && selecedCard.get()->compare_id == extraCard.get()->compare_id)
@@ -197,7 +200,7 @@ bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
             }
         }
     }
-    else if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)))
+    else if (msg.extraInfo && (cardInfo = dynamic_cast<CardInfo *>(msg.extraInfo)) && cardInfo->nodeType == LinkANodeType::CARD)
     {
         std::shared_ptr<Card> extraCard = outer->findCardPtrByInfo(cardInfo);
 

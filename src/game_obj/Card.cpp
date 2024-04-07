@@ -26,15 +26,23 @@ void Card::onEvent(LinkA_Event &event)
 
 void Card::create()
 {
-    std::stringstream ss;
-    ss << "card" << compare_id;
+
     this->PickedColor.x = this->PickedColor.y = this->PickedColor.z = 0.5;
     this->NormalColor.x = this->NormalColor.y = this->NormalColor.z = 1.f;
     // init img
-    img = game->getAssetManager()->getTexture(ss.str());
+    if (this->nodeType == LinkANodeType::OBSTACLE)
+    {
+        img = game->getAssetManager()->getTexture("obstacle");
+    }
+    else
+    {
+        std::stringstream ss;
+        ss << "card" << compare_id;
+        img = game->getAssetManager()->getTexture(ss.str());
+    }
     size = glm::vec2(50, 50);
     updateInfo();
-    events->registListerner(_CARD_SUCCESS_MATCH,this);
+    events->registListerner(_CARD_SUCCESS_MATCH, this);
 }
 
 void Card::updateInfo()
@@ -42,6 +50,7 @@ void Card::updateInfo()
     this->cardInfo.compare_id = this->compare_id;
     this->cardInfo.index = this->index;
     this->cardInfo.cPtr = this;
+    this->cardInfo.nodeType = this->nodeType;
 }
 void Card::render(Camera *cam)
 {
@@ -93,8 +102,10 @@ void CardInfo::render(Camera *){};
 void CardInfo::update(float delta){};
 
 // recipient
-bool Card::handleMessage(_LinkAMessage &msg){
-    if (msg.messageType == _CARD_SUCCESS_MATCH) {
+bool Card::handleMessage(_LinkAMessage &msg)
+{
+    if (msg.messageType == _CARD_SUCCESS_MATCH)
+    {
         std::cout << "invalid" << std::endl;
         this->status = Game_obj_status::INVALID;
         this->nodeStatus = LinkANodeValid::NODE_INVALID;
@@ -105,9 +116,10 @@ bool Card::handleMessage(_LinkAMessage &msg){
 
 std::vector<Connection<Card> *> LinkCardAGraph::getConnections(Card *fromNode)
 {
-    typename std::vector<Card*>::iterator it =
+    typename std::vector<Card *>::iterator it =
         std::find(this->nodeVector.begin(), this->nodeVector.end(), fromNode);
-    if (it == this->nodeVector.end()){
+    if (it == this->nodeVector.end())
+    {
         return emptyConnections;
     }
     return (*it)->getAllValidConnection();
@@ -115,9 +127,10 @@ std::vector<Connection<Card> *> LinkCardAGraph::getConnections(Card *fromNode)
 //   std::vector<Connection<Card> *> getConnections(Card *fromNode, Card *matchNode);
 std::vector<Connection<Card> *> LinkCardAGraph::getConnections(Card *fromNode, Card *matchNode)
 {
-    typename std::vector<Card*>::iterator it =
+    typename std::vector<Card *>::iterator it =
         std::find(this->nodeVector.begin(), this->nodeVector.end(), fromNode);
-    if (it == this->nodeVector.end()){
+    if (it == this->nodeVector.end())
+    {
         return emptyConnections;
     }
     return (*it)->getAllTargetValidConnection(matchNode);
@@ -132,11 +145,12 @@ int LinkCardAGraph::size()
     return this->nodeVector.size();
 };
 
-void LinkCardAGraph::create(){
+void LinkCardAGraph::create()
+{
     this->nodeVector.clear();
 };
 
-// connection 
+// connection
 Card *LinkACardConnection::getFromNode()
 {
     return this->fromNode;

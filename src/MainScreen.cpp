@@ -26,6 +26,9 @@ void MainScreen::create()
     game->getAssetManager()->loadTexture("./img/back.png", "back");
     game->getAssetManager()->loadTexture("./img/card1.png", "card1");
     game->getAssetManager()->loadTexture("./img/card2.png", "card2");
+    // obstacle
+    game->getAssetManager()->loadTexture("./img/obstacle.jpg", "obstacle");
+
     // 加载数据
     board = new Board();
     board->create();
@@ -42,14 +45,13 @@ void MainScreen::render()
 
     glm::mat4 view = camera->getViewMatrix();
     glm::mat4 projection = camera->getProjectionMatrix();
-    // render bg 
+    // render bg
     game->getSpriteRender()->DrawSprite(game->getAssetManager()->getTexture("background"), glm::vec2(0, 0), projection, view, glm::vec2(SCREEN_WIDTH, SCREEN_HEIGH));
 
     // draw board
     board->render(camera);
 
     // render ui
-    
 }
 
 void MainScreen::update(float delta)
