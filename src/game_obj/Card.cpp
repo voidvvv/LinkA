@@ -104,6 +104,7 @@ void CardInfo::update(float delta){};
 // recipient
 bool Card::handleMessage(_LinkAMessage &msg)
 {
+    if (this->status = Game_obj_status::INVALID) return false; // do nothing if is invalid
     if (msg.messageType == _CARD_SUCCESS_MATCH)
     {
         std::cout << "invalid" << std::endl;
