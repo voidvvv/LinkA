@@ -21,6 +21,9 @@ public:
     std::vector<std::shared_ptr<Card>> objs;
     std::vector<std::shared_ptr<Card>> selected;
 
+    std::vector<Card *> linkAPath;
+    bool showPath = false;
+
     int row = 8;
     int column = 8;
 

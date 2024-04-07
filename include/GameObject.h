@@ -27,7 +27,7 @@ public:
     bool delFlag = false; // wait to be delete as pointer
     glm::vec2 position;
     glm::vec2 size;
-
+    glm::vec2 center;
     /*
         input event
     */

@@ -10,6 +10,7 @@ void LinkAGame::create()
     // init asset
     assetManager->loadShader("./shader/simple/simple.vert", "./shader/simple/simple.frag", "simple");
     assetManager->loadShader("./shader/text_simple/text.vert", "./shader/text_simple/text.frag", "textSimple");
+    assetManager->loadShader("./shader/basic/simple.vert", "./shader/basic/simple.frag", "basic");
 
     assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
 
@@ -17,7 +18,9 @@ void LinkAGame::create()
     textManager->create();
 
     renderer = new SpriteRender(assetManager->getShader("simple"));
+    basicRender = new BasicRender(assetManager->getShader("basic"));
     renderer->initRenderData();
+    basicRender->initialData();
     setScreen(new MainScreen());
 }
 
@@ -48,7 +51,7 @@ void LinkAGame::setScreen(Screen *newScn)
 {
     if (this->scn != nullptr)
     {
-        std::cout << scn << std::endl;
+        // std::cout << scn << std::endl;
         this->scn->dispose();
     }
     this->scn = newScn;
@@ -58,6 +61,11 @@ void LinkAGame::setScreen(Screen *newScn)
 SpriteRender *LinkAGame::getSpriteRender()
 {
     return renderer;
+}
+
+BasicRender *LinkAGame::getBasicRender()
+{
+    return basicRender;
 }
 
 void LinkAGame::sendEvent(LinkA_Event &event)

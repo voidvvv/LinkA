@@ -10,10 +10,10 @@ private:
     InputEvent *contro;
     CharacterManager *textManager;
     SpriteRender *renderer;
+    BasicRender *basicRender;
 
 public:
     Screen *scn;
-
 
     AssetManager *assetManager;
 
@@ -25,6 +25,7 @@ public:
     void renderText(std::wstring &, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) override;
     void setScreen(Screen *) override;
     SpriteRender *getSpriteRender() override;
+    BasicRender * getBasicRender() override;
     void sendEvent(LinkA_Event &event) override;
-    virtual void resize(GLint&, GLint&) override;
+    virtual void resize(GLint &, GLint &) override;
 };
