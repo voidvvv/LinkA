@@ -1,6 +1,7 @@
 #include "LinkAFinder.h"
 #include <algorithm>
 
+
 LinkANode *LinkAConnection::getFromNode()
 {
     return this->fromNode;

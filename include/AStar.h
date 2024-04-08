@@ -16,7 +16,7 @@ class Graph
 {
 public:
     virtual std::vector<Connection<N> *> getConnections(N *fromNode) = 0;
-    virtual std::vector<Connection<N> *> getConnections(N *fromNode, N* matchNode) = 0;
+    virtual std::vector<Connection<N> *> getConnections(N *fromNode, N *matchNode) = 0;
     virtual int getIndex(N *node) = 0;
     virtual int size() = 0;
 };
@@ -45,13 +45,40 @@ public:
     Connection<N> *connection;
 
     /** The actual cost from the start node. */
-    float costSoFar = 0;
+    float costSoFar = 0.f;
+
+    float estimate = 0.f;
 
     /** The node category: {@link #UNVISITED}, {@link #OPEN} or {@link #CLOSED}. */
     Node_Category category = Node_Category::UNVISITED;
 
     /** ID of the current search. */
     unsigned int searchId = 0;
+
+    float value() const{
+        return estimate;
+    };
+
+    virtual bool operator==(const NodeRecord<N> &a) const 
+    {
+        return value() == a.value();
+    };
+    virtual bool operator>(const NodeRecord<N> &a) const 
+    {
+        return value() > a.value();
+    };
+    virtual bool operator>=(const NodeRecord<N> &a) const 
+    {
+        return value() >= a.value();
+    };
+    virtual bool operator<(const NodeRecord<N> &a) const 
+    {
+        return value() < a.value();
+    };
+    virtual bool operator<=(const NodeRecord<N> &a) const 
+    {
+        return value() <= a.value();
+    };
 };
 
 template <typename N>

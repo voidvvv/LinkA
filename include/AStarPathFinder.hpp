@@ -62,7 +62,7 @@ public:
     {
         Graph<N> *graphPtr = this->graph.get();
 
-        std::vector<Connection<N> *> connections = graphPtr->getConnections(current->node,end);
+        std::vector<Connection<N> *> connections = graphPtr->getConnections(current->node, end);
 
         for (int x = 0; x < connections.size(); x++)
         {
@@ -81,10 +81,13 @@ public:
                 openList.push_back(nrNode);
                 return;
             }
+            float nodeHeuristic;
 
-            if (nrNode->category == Node_Category::CLOSE && nrNode->costSoFar <= nodeCost)
+            if (nrNode->category == Node_Category::CLOSE)
             {
-                continue;
+                if (nrNode->costSoFar <= nodeCost)
+                    continue;
+                nodeHeuristic = nrNode->estimate - nrNode->costSoFar;
             }
             else if (nrNode->category == Node_Category::OPEN)
             {
@@ -93,14 +96,47 @@ public:
                     continue;
                 }
                 openList.erase(std::find(openList.begin(), openList.end(), nrNode));
+                nodeHeuristic = nrNode->estimate - nrNode->costSoFar;
+            }
+            else
+            {
+                nodeHeuristic = _Heuristic(toNode, end);
             }
 
             nrNode->costSoFar = nodeCost;
             nrNode->connection = con;
-
+            nrNode->estimate = nodeHeuristic + nodeCost;
             nrNode->category = Node_Category::OPEN;
-            openList.push_back(nrNode);
+            // openList.push_back(nrNode);
+            putNodeRecord(nrNode, openList);
         }
+    }
+
+    void putNodeRecord(NodeRecord<N> *nrNode, std::vector<NodeRecord<N> *> &openList)
+    {
+        // 默认按照从大到小排序,这样pop back获取到的就是当前最小的元素
+        int left = 0;
+        int right = openList.size() - 1;
+        int mid = left + (right - left) / 2;
+        while (left <= right)
+        {
+            mid = left + (right - left) / 2; // 防止溢出
+            if ((*openList[mid]) == *nrNode)
+            {
+                openList.insert(openList.begin() + mid, nrNode);
+                return; // 目标值在数组中的索引
+            }
+            else if ((*openList[mid]) > *nrNode)
+            {
+                left = mid + 1;
+            }
+            else
+            {
+                right = mid - 1;
+            }
+        }
+
+        openList.insert(openList.begin()+mid, nrNode);
     }
 
     bool searchNodePath(N *startNode, N *endNode,
