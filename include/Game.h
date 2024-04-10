@@ -5,6 +5,7 @@
 #include "AssetManager.h"
 #include "Screen.h"
 #include "SpriteRender.h"
+#include "BasicRender.h"
 
 class Game
 {
@@ -25,5 +26,6 @@ public:
     virtual void renderText(std::wstring&, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color ) = 0;
     virtual void sendEvent(LinkA_Event& event) = 0;
     virtual void resize(GLint&, GLint&) = 0;
+    virtual BasicRender * getBasicRender() = 0;
 
 };

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Game.h"
 #include "game_obj/Card.h"
+#include <algorithm>
 
 #include "miscellaneous.h"
 #include "Shader.h"
@@ -15,13 +16,8 @@ MainScreen::MainScreen()
 
 void MainScreen::create()
 {
-    // 初始化一些数据
-    cardGapx = 5.f;
-    cardGapy = 5.f;
-    cardWidth = 50.f;
-    cardHeight = 50.f;
-    cardsOrigin.x = 275;
-    cardsOrigin.y = 50;
+    // events->dispose();
+
     // 加载资源
     camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGH);
     // face = game->getAssetManager()->getTexture("face");
@@ -29,18 +25,17 @@ void MainScreen::create()
     game->getAssetManager()->loadTexture("./img/background.jpg", "background");
     game->getAssetManager()->loadTexture("./img/back.png", "back");
     game->getAssetManager()->loadTexture("./img/card1.png", "card1");
+    game->getAssetManager()->loadTexture("./img/card2.png", "card2");
+    // obstacle
+    game->getAssetManager()->loadTexture("./img/obstacle.jpg", "obstacle");
+
     // 加载数据
     board = new Board();
     board->create();
 
-    // 10 * 10
-    for (int x = 0; x < column * row; x++)
-    {
-        GameObject *tst = new Card();
-        tst->create();
-        objs.push_back(tst);
-    }
-    this->updateLayout();
+    _CardRecipient *main_recipient = new _CardRecipient();
+    main_recipient->outer = this;
+    events->registListerner(_CARD_SELECTED, main_recipient);
 }
 
 void MainScreen::render()
@@ -56,19 +51,12 @@ void MainScreen::render()
     // draw board
     board->render(camera);
 
-    for (GameObject *objPtr : objs)
-    {
-        objPtr->render(camera);
-    }
+    // render ui
 }
 
 void MainScreen::update(float delta)
 {
     board->update(delta);
-    for (GameObject *objPtr : objs)
-    {
-        objPtr->update(delta);
-    }
 }
 
 void MainScreen::dispose()
@@ -89,27 +77,9 @@ void MainScreen::sendEvent(LinkA_Event &event)
         event.world_pos = worldPos;
     }
     board->onEvent(event);
-    for (GameObject *objPtr : objs)
-    {
-        if (!event.s)
-        {
-            break;
-        }
-        objPtr->onEvent(event);
-    }
 }
 
-void MainScreen::updateLayout()
+bool MainScreen::_CardRecipient::handleMessage(_LinkAMessage &msg)
 {
-    for (int i = 0; i < objs.size() && i < column*row; i++){
-        GameObject* objPtr =  objs[i];
-        int c_col = i % column;
-        int c_row = i/column;
-
-        objPtr->position.x = cardGapx*(c_col+1) + cardWidth*c_col +cardsOrigin.x;
-        objPtr->position.y = cardGapy*(c_row+1) + c_row * cardHeight + cardsOrigin.y;
-
-        objPtr->size.x = cardWidth;
-        objPtr->size.y = cardHeight;
-    }
+    return false;
 }
