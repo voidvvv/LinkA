@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "miscellaneous.h"
 #include "LinkALog.h"
+#include "sound/SoundManager.h"
 
 
 void position_callback(GLFWwindow *window, double xpos, double ypos);
@@ -13,6 +14,7 @@ GLFWwindow *window;
 Game *game;
 LinKAViewPort *linKA_viewport;
 _LinkAGameEvents *events;
+SoundPlayer* soundManager;
 
 float lastTime;
 
@@ -34,6 +36,7 @@ void start(Game *__game)
     linKA_viewport = new LinKAViewPort();
 
     events = new _LinkAGameEvents();
+    soundManager = new SoundPlayer();
     initLogger();
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -63,6 +66,7 @@ void start(Game *__game)
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     lastTime = glfwGetTime();
+    soundManager->create();
     game->create();
     while (!glfwWindowShouldClose(window))
     {
@@ -76,6 +80,7 @@ void start(Game *__game)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    // soundManager->dispose();
     glfwTerminate();
 }
 

@@ -13,6 +13,15 @@ ShaderProgram *AssetManager::loadShader(const char *vertPath, const char *fragPa
     return shaderMap[name];
 }
 
+_MUSIC_ *AssetManager::loadMusic(const char *filePath, std::string name)
+{
+    _MUSIC_ * music = musicLoader.loadMusicFromFile(filePath);
+    if (music!=nullptr){
+        musicMap[name] = music;
+    }
+    return music;
+}
+
 Texture *AssetManager::getTexture(std::string name)
 {
     return textureMap[name];
@@ -21,4 +30,9 @@ Texture *AssetManager::getTexture(std::string name)
 ShaderProgram *AssetManager::getShader(std::string name)
 {
     return shaderMap[name];
+}
+
+_MUSIC_ *AssetManager::getMusic(std::string name)
+{
+    return musicMap[name];
 }
