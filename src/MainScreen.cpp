@@ -7,8 +7,10 @@
 #include "miscellaneous.h"
 #include "Shader.h"
 #include "OrthographicCamera.h"
+#include "sound/SoundManager.h"
 
 extern Game *game;
+extern SoundPlayer* soundManager;
 
 MainScreen::MainScreen()
 {
@@ -29,6 +31,8 @@ void MainScreen::create()
     // obstacle
     game->getAssetManager()->loadTexture("./img/obstacle.jpg", "obstacle");
 
+    // music
+    game->getAssetManager()->loadMusic("./sound/xx.mp3","xx");
     // 加载数据
     board = new Board();
     board->create();
@@ -36,6 +40,8 @@ void MainScreen::create()
     _CardRecipient *main_recipient = new _CardRecipient();
     main_recipient->outer = this;
     events->registListerner(_CARD_SELECTED, main_recipient);
+
+    soundManager->play(game->getAssetManager()->getMusic("xx"));
 }
 
 void MainScreen::render()

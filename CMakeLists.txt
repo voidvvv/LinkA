@@ -25,7 +25,19 @@ add_executable(LinkA  main.cpp glad.c head.cpp  ${SOURCES1} ${SOURCES2})
 
 
 # 添加静态依赖库
-target_link_libraries(${PROJECT_NAME} libglfw3.a libfreetyped.a libspdlogd.a libalut.dll.a OpenAL32.lib)
+target_link_libraries(${PROJECT_NAME} 
+libglfw3.a 
+libfreetyped.a 
+libspdlogd.a 
+libalut.dll.a 
+OpenAL32.lib
+
+liblibnyquist_d.a
+libvorbisfile.a 
+libvorbis.a
+libogg.a
+libvorbisenc.a
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
