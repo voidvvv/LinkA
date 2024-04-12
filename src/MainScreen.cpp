@@ -41,7 +41,7 @@ void MainScreen::create()
     main_recipient->outer = this;
     events->registListerner(_CARD_SELECTED, main_recipient);
 
-    soundManager->play(game->getAssetManager()->getMusic("xx"));
+    soundManager->playBgm(game->getAssetManager()->getMusic("xx"));
 }
 
 void MainScreen::render()
