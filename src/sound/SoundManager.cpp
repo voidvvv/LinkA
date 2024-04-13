@@ -1,5 +1,5 @@
 #include "sound/SoundManager.h"
-
+#include <iostream>
 
 static void playSource(ALuint source)
 {
@@ -82,7 +82,9 @@ void SoundPlayer::playBgm(_MUSIC_ *music)
     if (music->getCurrentSource() != bgmSource)
     {
         stopSource(music->getCurrentSource());
-        sourceList.push_back(music->getCurrentSource());
+        if (music->getCurrentSource() > 0) {
+            sourceList.push_back(music->getCurrentSource());
+        }
 
         music->setCurrentSource(bgmSource);
         stopSource(bgmSource);
@@ -111,6 +113,7 @@ void SoundPlayer::update()
             it = runningSource.erase(it);
             alSourcei(source, AL_BUFFER, 0);
             sourceList.push_back(source);
+            std::cout << " erase for : " << music->getBuffer() << std::endl;
         }
         else
         {

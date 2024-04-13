@@ -33,6 +33,8 @@ void MainScreen::create()
 
     // music
     game->getAssetManager()->loadMusic("./sound/xx.mp3","xx");
+        game->getAssetManager()->loadMusic("./sound/chipLay1.wav","chipLay1");
+
     // 加载数据
     board = new Board();
     board->create();
@@ -41,7 +43,7 @@ void MainScreen::create()
     main_recipient->outer = this;
     events->registListerner(_CARD_SELECTED, main_recipient);
 
-    soundManager->play(game->getAssetManager()->getMusic("xx"));
+    soundManager->playBgm(game->getAssetManager()->getMusic("xx"));
 }
 
 void MainScreen::render()

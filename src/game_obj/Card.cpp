@@ -2,8 +2,10 @@
 #include "ObjUtil.h"
 #include <iostream>
 
-extern _LinkAGameEvents *events;
+#include "sound/SoundManager.h"
 
+extern _LinkAGameEvents *events;
+extern SoundPlayer* soundManager;
 void Card::onEvent(LinkA_Event &event)
 {
     if (this->status == GAME_STATUS::INVALID)
@@ -13,6 +15,9 @@ void Card::onEvent(LinkA_Event &event)
         if (contain(this, event))
         {
             // send message
+            
+            _MUSIC_* music =  game->getAssetManager()->getMusic("chipLay1");
+            soundManager->play(music);
             events->sendMessaage(_CARD_SELECTED, this, NULL, &(this->cardInfo));
         }
     }
