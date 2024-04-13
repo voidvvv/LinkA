@@ -77,6 +77,7 @@ void start(Game *__game)
         game->update(delta);
         game->render();
         lastTime = cur;
+        soundManager->update();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
