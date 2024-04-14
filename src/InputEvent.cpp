@@ -3,7 +3,6 @@
 #include "Game.h"
 #include <iostream>
 
-
 extern Game *game;
 extern GLFWwindow *window;
 void InputEvent::mouseMove(double x, double y)
@@ -12,15 +11,18 @@ void InputEvent::mouseMove(double x, double y)
     // this->delta_y = (SCREEN_HEIGH - y - ypos);
 
     this->pos.x = static_cast<float>(x);
-    
+
     this->pos.y = static_cast<float>(game->ScreenHeight - y);
 
     sendMouseEvent(LinkA_EventType::MOUSE_MOVE, -1, -1);
-
 }
 
 void InputEvent::keyEvent(int key, int scancode, int action, int mods)
 {
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    {
+        sendKeyEvent(LinkA_EventType::KEY_BOARD_PRESS,LinkA_FuncKey::BASE_FUNC,mods);
+    }
 }
 
 void InputEvent::mouseButton(int button, int action, int mods)
@@ -78,7 +80,31 @@ void InputEvent::sendMouseEvent(LinkA_EventType eventType, int button, int mods)
     }
 }
 
-bool isMouse(LinkA_Event* e)
+void InputEvent::sendKeyEvent(LinkA_EventType eventType,LinkA_FuncKey keyType, int mods)
+{
+    if (cache.size() > 0)
+    {
+        LinkA_Event e = cache.back();
+        cache.pop_back();
+        e.type = eventType;
+        e.func = keyType;
+        e.mods = mods;
+        e.s = true;
+        game->sendEvent(e);
+        cache.push_back(e);
+    }
+    else
+    {
+        LinkA_Event e;
+        e.type = eventType;
+        e.func = keyType;
+        e.mods = mods;
+        e.s = true;
+        game->sendEvent(e);
+    }
+}
+
+bool isMouse(LinkA_Event *e)
 {
     //     MOUSE_MOVE,
     // MOUSE_PRESS,

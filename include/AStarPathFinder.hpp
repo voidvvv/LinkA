@@ -11,13 +11,13 @@ class AStarPathFinder : public PathFinder<N>
 private:
     unsigned int searchId = 0;
     std::vector<NodeRecord<N> *> records;
-    std::shared_ptr<Graph<N>> graph;
+    Graph<N>* graph;
     NodeRecord<N> *current;
 
 public:
     NodeRecord<N> *getNodeRecord(N *node)
     {
-        Graph<N> *gp = graph.get();
+        Graph<N> *gp = graph;
         int index = gp->getIndex(node);
         NodeRecord<N> *nodeRecord = records[index];
         if (nodeRecord == NULL)
@@ -42,7 +42,7 @@ public:
     {
         current = NULL;
         records = std::vector<NodeRecord<N> *>(_graph->size());
-        this->graph.reset(_graph);
+        this->graph = _graph;
         // this->graph = std::shared_ptr<Graph<N>>(_graph);
     }
     void generateNodePath(N *startNode, std::vector<N *> &outPath) override
@@ -52,7 +52,7 @@ public:
         {
             outPath.push_back(current->node);
             // current->connection->getFromNode
-            Graph<N> *gp = graph.get();
+            Graph<N> *gp = graph;
             current = records[gp->getIndex(current->connection->getFromNode())];
         }
         outPath.push_back(startNode);
@@ -60,7 +60,7 @@ public:
 
     void visitChild(N *end, float (*_Heuristic)(N *, N *), std::vector<NodeRecord<N> *> &openList)
     {
-        Graph<N> *graphPtr = this->graph.get();
+        Graph<N> *graphPtr = this->graph;
 
         std::vector<Connection<N> *> connections = graphPtr->getConnections(current->node, end);
 

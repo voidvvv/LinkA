@@ -4,6 +4,7 @@
 #include "AssetManager.h"
 #include "TextApplication.h"
 
+
 class LinkAGame : public Game
 {
 private:
@@ -28,4 +29,5 @@ public:
     BasicRender * getBasicRender() override;
     void sendEvent(LinkA_Event &event) override;
     virtual void resize(GLint &, GLint &) override;
+    virtual RANDOM_NUM rand(RANDOM_NUM min, RANDOM_NUM max) override;
 };

@@ -50,7 +50,7 @@ public:
 class Card : public GameObject, public LinkCardANode, public _Recipient
 {
 public:
-  CardInfo cardInfo;
+  // CardInfo cardInfo;
   int compare_id;
 
   Texture *img;
@@ -66,6 +66,7 @@ public:
   virtual void updateInfo();
   virtual void render(Camera *);
   virtual void update(float delta);
+  virtual void dispose() override;
   virtual std::vector<Connection<Card> *> getAllValidConnection();
   virtual std::vector<Connection<Card> *> getAllTargetValidConnection(Card *target);
 

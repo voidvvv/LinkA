@@ -18,6 +18,11 @@
 class MainScreen : public Screen
 {
 private:
+// UI
+    std::wstring s;
+    std::wstring title;
+    int score;
+
     GLfloat *pPointDepth = new float(1.f);
     glm::vec3 tmpV;
     Camera *camera;

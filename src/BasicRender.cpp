@@ -47,6 +47,7 @@ void BasicRender::drawLine(glm::vec3 start, glm::vec3 end,
     // bind matrix
     shader->use();
     glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER,VBO);
     shader->setUniformMat4("projection", camera->getProjectionMatrix());
     // shader->setUniformMat4("projection", glm::mat4(1.f));
 
@@ -66,9 +67,10 @@ void BasicRender::drawLine(glm::vec3 start, glm::vec3 end,
 
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, vIndex * sizeof(float), vertex);
-
+    glBindBuffer(GL_ARRAY_BUFFER,0);
     glDrawArrays(GL_LINES, 0, 2);
 
+    glUseProgram(0);
     glBindVertexArray(0);
 }
 

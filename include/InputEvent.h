@@ -18,7 +18,7 @@ enum LinkA_EventType
 
 enum LinkA_FuncKey
 {
-
+    BASE_FUNC,// default is space key
 };
 class LinkA_Event
 {
@@ -45,6 +45,7 @@ public:
     void mouseMove(double x, double y);
     void keyEvent(int key, int scancode, int action, int mods);
     void mouseButton(int button, int action, int mods);
+    void sendKeyEvent(LinkA_EventType,LinkA_FuncKey, int mods);
     void update(float dalta);
 };
 
