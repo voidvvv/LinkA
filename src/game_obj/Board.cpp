@@ -52,11 +52,7 @@ void Board::create()
         tst->x = x_pos;
         tst->y = y_pos;
         tst->index = x;
-        tst->compare_id = 1;
-        if (x % 2 == 1)
-        {
-            tst->compare_id = 2;
-        }
+        tst->compare_id = x%4 +1;
         if (x_pos == y_pos)
         {
             tst->nodeType = LinkANodeType::OBSTACLE;

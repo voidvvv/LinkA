@@ -22,12 +22,13 @@ void MainScreen::create()
 
     // 加载资源
     camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGH);
-    // face = game->getAssetManager()->getTexture("face");
     game->getAssetManager()->loadTexture("./img/beauti.png", "board");
     game->getAssetManager()->loadTexture("./img/background.jpg", "background");
     game->getAssetManager()->loadTexture("./img/back.png", "back");
     game->getAssetManager()->loadTexture("./img/card1.png", "card1");
     game->getAssetManager()->loadTexture("./img/card2.png", "card2");
+    game->getAssetManager()->loadTexture("./img/card3.png", "card3");
+game->getAssetManager()->loadTexture("./img/card4.png", "card4");
     // obstacle
     game->getAssetManager()->loadTexture("./img/obstacle.jpg", "obstacle");
 
@@ -65,7 +66,7 @@ void MainScreen::render()
 
     // render ui
     game->renderText(title, 20, 500, 1, glm::vec3(1.f));
-    std::wstring wStrscore = L"分数: " +  std::to_wstring(score);
+    std::wstring wStrscore = L"分数: " + std::to_wstring(score);
     game->renderText(wStrscore, 20, 400, 1, glm::vec3(1.f));
 }
 
@@ -92,7 +93,8 @@ void MainScreen::sendEvent(LinkA_Event &event)
         event.world_pos = worldPos;
     }
     // LinkA_EventType::KEY_BOARD_PRESS,LinkA_FuncKey::BASE_FUNC
-    if (event.type == LinkA_EventType::KEY_BOARD_PRESS && event.func == LinkA_FuncKey::BASE_FUNC) {
+    if (event.type == LinkA_EventType::KEY_BOARD_PRESS && event.func == LinkA_FuncKey::BASE_FUNC)
+    {
         board->dispose();
         board->create();
         score = 0;
@@ -102,7 +104,8 @@ void MainScreen::sendEvent(LinkA_Event &event)
 
 bool MainScreen::_CardRecipient::handleMessage(_LinkAMessage &msg)
 {
-    if (msg.messageType == _CARD_SUCCESS_MATCH_GLOBAL) {
+    if (msg.messageType == _CARD_SUCCESS_MATCH_GLOBAL)
+    {
         outer->score++;
         return true;
     }

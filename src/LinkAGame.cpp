@@ -1,5 +1,6 @@
 #include "LinkAGame.h"
 #include "MainScreen.h"
+#include <ctime>
 
 void LinkAGame::create()
 {
@@ -22,6 +23,8 @@ void LinkAGame::create()
     basicRender->initialData();
     setScreen(new MainScreen());
 
+    // rand seed
+    // srand(std::time(NULL));
     std::random_device seedDevice;
     this->seed = seedDevice();
     std::cout << "Game init with seed: " << seed << std::endl;
