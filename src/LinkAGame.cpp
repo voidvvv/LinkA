@@ -1,5 +1,6 @@
 #include "LinkAGame.h"
 #include "MainScreen.h"
+#include <ctime>
 
 void LinkAGame::create()
 {
@@ -12,9 +13,8 @@ void LinkAGame::create()
     assetManager->loadShader("./shader/text_simple/text.vert", "./shader/text_simple/text.frag", "textSimple");
     assetManager->loadShader("./shader/basic/simple.vert", "./shader/basic/simple.frag", "basic");
 
-    assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
+    // assetManager->loadTexture("C:/Users/voidvvv/Pictures/asset/enhancer_profile.png", "face");
 
-    std::wstring ws = L"我爱中华";
     textManager->create();
 
     renderer = new SpriteRender(assetManager->getShader("simple"));
@@ -22,6 +22,12 @@ void LinkAGame::create()
     renderer->initRenderData();
     basicRender->initialData();
     setScreen(new MainScreen());
+
+    // rand seed
+    // srand(std::time(NULL));
+    std::random_device seedDevice;
+    this->seed = seedDevice();
+    std::cout << "Game init with seed: " << seed << std::endl;
 }
 
 InputEvent *LinkAGame::getInputEvent() { return contro; }
@@ -77,4 +83,10 @@ void LinkAGame::resize(GLint& w, GLint& h)
 {
     this->ScreenWidth = w;
     this->ScreenHeight = h;
+}
+
+RANDOM_NUM LinkAGame::rand(RANDOM_NUM min, RANDOM_NUM max) {
+    std::ranlux48 engine(this->seed);
+    std::uniform_int_distribution<> distrib(min, max);
+    return distrib(engine);//随机数
 }

@@ -18,7 +18,7 @@ void Card::onEvent(LinkA_Event &event)
             
             _MUSIC_* music =  game->getAssetManager()->getMusic("chipLay1");
             soundManager->play(music);
-            events->sendMessaage(_CARD_SELECTED, this, NULL, &(this->cardInfo));
+            events->sendMessaage(_CARD_SELECTED, this, NULL, this);
         }
     }
     else if (event.type == LinkA_EventType::MOUSE_RELEASE)
@@ -27,6 +27,10 @@ void Card::onEvent(LinkA_Event &event)
     else if (event.type == LinkA_EventType::MOUSE_MOVE)
     {
     }
+}
+
+void Card::dispose(){
+    events->removeListerner(this);
 }
 
 void Card::create()
@@ -52,10 +56,10 @@ void Card::create()
 
 void Card::updateInfo()
 {
-    this->cardInfo.compare_id = this->compare_id;
-    this->cardInfo.index = this->index;
-    this->cardInfo.cPtr = this;
-    this->cardInfo.nodeType = this->nodeType;
+    // this->cardInfo.compare_id = this->compare_id;
+    // this->cardInfo.index = this->index;
+    // this->cardInfo.cPtr = this;
+    // this->cardInfo.nodeType = this->nodeType;
 }
 void Card::render(Camera *cam)
 {

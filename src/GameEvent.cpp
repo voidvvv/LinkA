@@ -60,3 +60,22 @@ void _LinkAGameEvents::registListerner(int messageType, _Recipient *lsn)
 {
     listeners[messageType].push_back(lsn);
 }
+
+void _LinkAGameEvents::removeListerner(_Recipient *lsn)
+{
+    for (auto it = listeners.begin(); it != listeners.end(); it++)
+    {
+        std::vector<_Recipient *> &list = it->second;
+        for (auto itInner = list.begin(); itInner != list.end();)
+        {
+            if ((*itInner) == lsn)
+            {
+                itInner = list.erase(itInner);
+            }
+            else
+            {
+                itInner++;
+            }
+        }
+    }
+}

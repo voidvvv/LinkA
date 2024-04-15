@@ -88,10 +88,8 @@ CharacterManager::CharacterManager()
 //     glBindVertexArray(0);
 // }
 
-void CharacterManager::create(const char* file)
+void CharacterManager::create(const char *file)
 {
-
-
 
     camera = new OrthographicCamera(800, 600);
     // All functions return a value different than 0 whenever an error occurred
@@ -101,8 +99,6 @@ void CharacterManager::create(const char* file)
     if (FT_New_Face(ft, file, 0, &face))
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-
-
     // Set size to load glyphs as
     FT_Set_Pixel_Sizes(face, 0, 45);
     // FT_Select_Charmap(face, ft_encoding_unicode);
@@ -111,7 +107,7 @@ void CharacterManager::create(const char* file)
 
     for (int x = 0; x < 128; x++)
     {
-        
+
         loadCharater(x, face);
     }
 
@@ -130,18 +126,17 @@ void CharacterManager::create(const char* file)
 
 void CharacterManager::create()
 {
-// "C:/Windows/Fonts/SIMLI.TTF"
-    create("C:/Windows/Fonts/SIMLI.TTF");
+    // "C:/Windows/Fonts/SIMLI.TTF"
+    create("C:/Windows/Fonts/msyh.ttc");
 }
-
-
 
 void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, int size, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
     // Activate corresponding render state
+    program->use();
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    program->use();
+
     glUniform3f(glGetUniformLocation(program->ID, "u_color"), color.x, color.y, color.z);
     program->setUniformMat4("projection", camera->projection);
     glActiveTexture(GL_TEXTURE0);
@@ -150,10 +145,11 @@ void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, in
     for (int i = 0; i < size; i++)
     {
         GLint s = static_cast<int>(text[i]);
-        if (CharacterCache.find(s) == CharacterCache.end()){
-            loadCharater(s,face);
+        if (CharacterCache.find(s) == CharacterCache.end())
+        {
+            loadCharater(s, face);
         }
-        Character ch = CharacterCache[text[i]];
+        Character ch = CharacterCache[s];
 
         GLfloat xpos = x + ch.Bearing.x * scale;
         GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
@@ -184,5 +180,5 @@ void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, in
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_BLEND);
+    glUseProgram(0);
 }
-

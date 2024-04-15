@@ -12,14 +12,24 @@
 
 class Board : public GameObject
 {
-private:
-    std::map<void*,std::shared_ptr<Card>> ptrMapping;
 public:
-    AStarPathFinder<Card>* pathFinder;
-    LinkCardAGraph* graph;
+    class BaseBoard_CardRecipient : public _Recipient
+    {
+    public:
+        Board *outer;
+        virtual bool handleMessage(_LinkAMessage &msg);
+    };
 
-    std::vector<std::shared_ptr<Card>> objs;
-    std::vector<std::shared_ptr<Card>> selected;
+private:
+    // std::map<void*,std::shared_ptr<Card>> ptrMapping;
+    BaseBoard_CardRecipient *main_recipient;
+
+public:
+    AStarPathFinder<Card> *pathFinder;
+    LinkCardAGraph *graph;
+
+    std::vector<Card *> objs;
+    std::vector<Card *> selected;
 
     std::vector<Card *> linkAPath;
     bool showPath = false;
@@ -34,18 +44,12 @@ public:
     float cardHeight;
     Texture *ground;
 
-    class BaseBoard_CardRecipient : public _Recipient
-    {
-    public:
-        Board *outer;
-        virtual bool handleMessage(_LinkAMessage &msg);
-    };
     virtual void create() override;
     virtual void render(Camera *) override;
     virtual void update(float delta) override;
     virtual void onEvent(LinkA_Event &__event) override;
     virtual void updateLayout();
-    virtual std::shared_ptr<Card> findCardPtrByInfo(CardInfo *ci);
+    // virtual std::shared_ptr<Card> findCardPtrByInfo(CardInfo *ci);
     void dispose();
 };
 

@@ -8,7 +8,7 @@
 
 #define _CARD_SELECTED 1
 #define _CARD_SUCCESS_MATCH 2
-
+#define _CARD_SUCCESS_MATCH_GLOBAL 3
 
 enum _ReturnReceiptStatus
 {
@@ -49,6 +49,7 @@ public:
     void sendMessaage(_LinkAMessage &message);
     void dispose();
     void registListerner(int messageType, _Recipient *);
+    void removeListerner(_Recipient *);
 };
 
 extern _LinkAGameEvents* events;
