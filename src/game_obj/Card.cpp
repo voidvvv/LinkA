@@ -5,7 +5,7 @@
 #include "sound/SoundManager.h"
 
 extern _LinkAGameEvents *events;
-extern SoundPlayer* soundManager;
+extern SoundPlayer *soundManager;
 void Card::onEvent(LinkA_Event &event)
 {
     if (this->status == GAME_STATUS::INVALID)
@@ -15,8 +15,8 @@ void Card::onEvent(LinkA_Event &event)
         if (contain(this, event))
         {
             // send message
-            
-            _MUSIC_* music =  game->getAssetManager()->getMusic("chipLay1");
+
+            _MUSIC_ *music = game->getAssetManager()->getMusic("chipLay1");
             soundManager->play(music);
             events->sendMessaage(_CARD_SELECTED, this, NULL, this);
         }
@@ -29,7 +29,8 @@ void Card::onEvent(LinkA_Event &event)
     }
 }
 
-void Card::dispose(){
+void Card::dispose()
+{
     events->removeListerner(this);
 }
 
@@ -50,6 +51,8 @@ void Card::create()
         img = game->getAssetManager()->getTexture(ss.str());
     }
     size = glm::vec2(50, 50);
+    this->status = Game_obj_status::NORMAL;
+    this->nodeStatus = LinkANodeValid::NODE_VALID;
     updateInfo();
     events->registListerner(_CARD_SUCCESS_MATCH, this);
 }
@@ -113,13 +116,18 @@ void CardInfo::update(float delta){};
 // recipient
 bool Card::handleMessage(_LinkAMessage &msg)
 {
-    if (this->status == Game_obj_status::INVALID) return false; // do nothing if is invalid
+    if (this->status == Game_obj_status::INVALID)
+        return false; // do nothing if is invalid
     if (msg.messageType == _CARD_SUCCESS_MATCH)
     {
         std::cout << "invalid" << std::endl;
+        std::cout << this->status << std::endl;
+        std::cout << this->nodeStatus << std::endl;
+
         this->status = Game_obj_status::INVALID;
         this->nodeStatus = LinkANodeValid::NODE_INVALID;
     }
+    return true;
 };
 
 // card graph

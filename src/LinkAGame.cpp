@@ -1,6 +1,7 @@
 #include "LinkAGame.h"
 #include "MainScreen.h"
 #include <ctime>
+#include "LinkALog.h"
 
 void LinkAGame::create()
 {
@@ -28,6 +29,7 @@ void LinkAGame::create()
     std::random_device seedDevice;
     this->seed = seedDevice();
     std::cout << "Game init with seed: " << seed << std::endl;
+    LinkALog->info("Game init with seed: " + std::to_string(seed));
 }
 
 InputEvent *LinkAGame::getInputEvent() { return contro; }

@@ -30,7 +30,7 @@ public:
   int y;
   int index;
   LinkANodeType nodeType;
-  LinkANodeValid nodeStatus = LinkANodeValid::NODE_VALID;
+  LinkANodeValid nodeStatus;
   std::shared_ptr<GameObject> obj;
   virtual std::vector<Connection<Card> *> getAllValidConnection() = 0;
 };
