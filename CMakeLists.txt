@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.4...3.28 FATAL_ERROR)
+set(CMAKE_INSTALL_PREFIX C:/myWareHouse/dev/cpp/cmake_install)
+
 project(LinkA VERSION 0.1.0 LANGUAGES C CXX)
 set(CMAKE_CHARSET "UTF-8")
 #关闭所有警告（有效）
@@ -8,9 +10,9 @@ include(CTest)
 enable_testing()
 
 #链接库的目录,可用相对路径
-link_directories(C:/myWareHouse/dev/cpp/vscode_lib)
+link_directories(C:/myWareHouse/dev/cpp/cmake_install/lib  C:/myWareHouse/dev/cpp/vscode_lib)
 #配置头文件目录
-include_directories(C:/myWareHouse/dev/cpp/include ./include)
+include_directories(C:/myWareHouse/dev/cpp/cmake_install/include C:/myWareHouse/dev/cpp/include ./include)
 
 # 定义文件
 file(GLOB SOURCES1 "src/**/*.cpp")
@@ -30,7 +32,7 @@ libglfw3.a
 libfreetyped.a 
 libspdlogd.a 
 libalut.dll.a 
-OpenAL32.lib
+libOpenAL32.dll.a
 
 liblibnyquist_d.a
 libvorbisfile.a 

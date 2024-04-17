@@ -46,7 +46,7 @@ game->getAssetManager()->loadTexture("./img/card4.png", "card4");
     // _CARD_SUCCESS_MATCH_GLOBAL
     events->registListerner(_CARD_SUCCESS_MATCH_GLOBAL, main_recipient);
 
-    // soundManager->playBgm(game->getAssetManager()->getMusic("xx"));
+    soundManager->playBgm(game->getAssetManager()->getMusic("xx"));
     title = L"茜茜连连看";
     score = 0;
 }
