@@ -2,6 +2,7 @@
 #include "LinkALog.h"
 
 extern Game *game;
+extern SoundPlayer* soundManager;
 void printPath(std::vector<Card *> path)
 {
     std::cout << "----" << std::endl;
@@ -44,6 +45,18 @@ void Board::create()
     pathFinder = new AStarPathFinder<Card>();
     graph = new LinkCardAGraph();
     graph->create();
+    std::vector<Card *> tmpVector;
+    int limit = (column * row) /2;
+    int obstacleNum = (column * row) % 2;
+    for (int x = 0; x < limit; x++) {
+        Card *tst = new Card();
+        int i = game->rand(0,limit-1) + 1;
+        tst->compare_id = i;
+        tmpVector.push_back(tst);
+        Card *tst2 = new Card();
+        tst2->compare_id = i;
+        tmpVector.push_back(tst2);
+    }
     for (int x = 0; x < column * row; x++)
     {
         Card *tst = new Card();
@@ -73,6 +86,9 @@ void Board::create()
 
 void Board::render(Camera *camera)
 {
+    glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     game->getSpriteRender()->DrawSprite(ground, position, camera->getProjectionMatrix(), camera->getViewMatrix(), size);
 
     for (Card* objPtr : objs)
@@ -91,6 +107,8 @@ void Board::render(Camera *camera)
             game->getBasicRender()->drawLine(pos1, pos2, camera, glm::vec3(1.0f, 0.f, 0.f), glm::vec3(1.0f, 0.f, 0.f));
         }
     }
+        glDisable(GL_BLEND);
+
 }
 
 void Board::update(float delta)
@@ -204,6 +222,7 @@ bool Board::BaseBoard_CardRecipient::handleMessage(_LinkAMessage &msg)
 
                 if (b)
                 {
+                    soundManager->play(game->getAssetManager()->getMusic("foom_0"));
                     std::cout << "outer->linkAPath size: " << outer->linkAPath.size() << std::endl;
                     printPath(outer->linkAPath);
                     outer->showPath = true;

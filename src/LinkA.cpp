@@ -3,6 +3,7 @@
 #include "miscellaneous.h"
 #include "LinkALog.h"
 #include "sound/SoundManager.h"
+#include "../include/CameraController.h"
 
 
 void position_callback(GLFWwindow *window, double xpos, double ypos);
@@ -15,6 +16,7 @@ Game *game;
 LinKAViewPort *linKA_viewport;
 _LinkAGameEvents *events;
 SoundPlayer* soundManager;
+
 
 float lastTime;
 
@@ -51,6 +53,7 @@ void start(Game *__game)
         SPDLOG_LOGGER_INFO(LinkALog, "window error!");
         return;
     }
+    camera_context::window = window;
     // linKA_viewport->apply(0, 0, SCREEN_WIDTH, SCREEN_HEIGH);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -72,6 +75,7 @@ void start(Game *__game)
     {
         float cur = glfwGetTime();
         float delta = cur - lastTime;
+        cameracontrol::update(delta);
         game->time = game->time + delta;
         game->recent_delta = delta;
         game->update(delta);
@@ -99,6 +103,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 void key_event_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     game->getInputEvent()->keyEvent(key, scancode, action, mods);
+    cameracontrol::onKeyPress(key,action,mods);
 }
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)

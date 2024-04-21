@@ -2,6 +2,9 @@
 
 Texture *AssetManager::loadTexture(const char *path, std::string name)
 {
+    if (textureMap[name] != NULL) {
+        delete textureMap[name];
+    }
     textureMap[name] = new Texture(path);
     return textureMap[name];
 }

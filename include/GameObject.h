@@ -7,7 +7,7 @@
 
 #include "InputEvent.h"
 
-#include "Camera.h"
+#include <Camera.h>
 
 
 extern Game* game;

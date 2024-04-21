@@ -3,10 +3,11 @@
 #include "Game.h"
 #include "game_obj/Card.h"
 #include <algorithm>
-
+#include <OrthographicCamera.h>
 #include "miscellaneous.h"
 #include "Shader.h"
-#include "OrthographicCamera.h"
+#include "../include/CameraController.h"
+
 #include "sound/SoundManager.h"
 
 extern Game *game;
@@ -19,23 +20,37 @@ MainScreen::MainScreen()
 void MainScreen::create()
 {
     // events->dispose();
-
+    const float width = SCREEN_WIDTH;
+    const float height = SCREEN_HEIGH;
     // 加载资源
-    camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGH);
+    camera = new OrthographicCamera(width, height);
+    cameracontrol::addController(camera);
     game->getAssetManager()->loadTexture("./img/beauti.png", "board");
     game->getAssetManager()->loadTexture("./img/background.jpg", "background");
     game->getAssetManager()->loadTexture("./img/back.png", "back");
     game->getAssetManager()->loadTexture("./img/card1.png", "card1");
     game->getAssetManager()->loadTexture("./img/card2.png", "card2");
     game->getAssetManager()->loadTexture("./img/card3.png", "card3");
-game->getAssetManager()->loadTexture("./img/card4.png", "card4");
+    game->getAssetManager()->loadTexture("./img/card4.png", "card4");
+
+    game->getAssetManager()->loadTexture("./img/skybox/back.jpg", "skybox_back");
+    game->getAssetManager()->loadTexture("./img/skybox/bottom.jpg", "skybox_bottom");
+
+    game->getAssetManager()->loadTexture("./img/skybox/front.jpg", "skybox_front");
+
+    game->getAssetManager()->loadTexture("./img/skybox/left.jpg", "skybox_left");
+
+    game->getAssetManager()->loadTexture("./img/skybox/back.jpg", "skybox_back");
+
+    game->getAssetManager()->loadTexture("./img/skybox/back.jpg", "skybox_back");
+
     // obstacle
     game->getAssetManager()->loadTexture("./img/obstacle.jpg", "obstacle");
 
     // music
-    game->getAssetManager()->loadMusic("./sound/xx.mp3", "xx");
+    game->getAssetManager()->loadMusic("./sound/bgm.mp3", "bgm");
     game->getAssetManager()->loadMusic("./sound/chipLay1.wav", "chipLay1");
-
+    game->getAssetManager()->loadMusic("./sound/foom_0.wav", "foom_0");
     // 加载数据
     board = new Board();
     board->create();
@@ -46,7 +61,7 @@ game->getAssetManager()->loadTexture("./img/card4.png", "card4");
     // _CARD_SUCCESS_MATCH_GLOBAL
     events->registListerner(_CARD_SUCCESS_MATCH_GLOBAL, main_recipient);
 
-    soundManager->playBgm(game->getAssetManager()->getMusic("xx"));
+    soundManager->playBgm(game->getAssetManager()->getMusic("bgm"));
     title = L"茜茜连连看";
     score = 0;
 }
@@ -65,7 +80,7 @@ void MainScreen::render()
     board->render(camera);
 
     // render ui
-    game->renderText(title, 20, 500, 1, glm::vec3(1.f));
+    game->renderText(title, 20, 500, 1, glm::vec3(0.5f));
     std::wstring wStrscore = L"分数: " + std::to_wstring(score);
     game->renderText(wStrscore, 20, 400, 1, glm::vec3(1.f));
 }
@@ -90,6 +105,9 @@ void MainScreen::sendEvent(LinkA_Event &event)
         tmpV.y = event.pos.y;
         tmpV.z = 0.f;
         glm::vec3 worldPos = camera->unproject(this->tmpV);
+        std::cout << tmpV.x << " - " << tmpV.y<< " - " << tmpV.z << std::endl;
+                std::cout << worldPos.x << " - " << worldPos.y<< " - " << worldPos.z << std::endl;
+
         event.world_pos = worldPos;
     }
     // LinkA_EventType::KEY_BOARD_PRESS,LinkA_FuncKey::BASE_FUNC

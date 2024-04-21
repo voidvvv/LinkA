@@ -13,7 +13,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
-#include "OrthographicCamera.h"
+#include <OrthographicCamera.h>
 
 struct Character
 {

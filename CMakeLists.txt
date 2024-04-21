@@ -12,7 +12,9 @@ enable_testing()
 #链接库的目录,可用相对路径
 link_directories(C:/myWareHouse/dev/cpp/cmake_install/lib  C:/myWareHouse/dev/cpp/vscode_lib)
 #配置头文件目录
-include_directories(C:/myWareHouse/dev/cpp/cmake_install/include C:/myWareHouse/dev/cpp/include ./include)
+include_directories(C:/myWareHouse/dev/cpp/cmake_install/include 
+        C:/myWareHouse/dev/cpp/include 
+        ./include)
 
 # 定义文件
 file(GLOB SOURCES1 "src/**/*.cpp")
@@ -33,6 +35,7 @@ libfreetyped.a
 libspdlogd.a 
 libalut.dll.a 
 libOpenAL32.dll.a
+
 
 liblibnyquist_d.a
 libvorbisfile.a 

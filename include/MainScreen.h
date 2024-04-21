@@ -8,7 +8,7 @@
 
 #include "Screen.h"
 #include "Texture.h"
-#include "Camera.h"
+#include <Camera.h>
 #include "TextApplication.h"
 #include "GameObject.h"
 #include "game_obj/Board.h"

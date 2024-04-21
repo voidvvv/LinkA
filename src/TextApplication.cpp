@@ -1,8 +1,8 @@
-#include "TextApplication.h"
+#include <TextApplication.h>
 #include <typeinfo>
 #include <locale>
 #include <codecvt> // codecvt_utf8
-#include "LinkALog.h"
+#include <LinkALog.h>
 
 void CharacterManager::loadCharater(GLint &ch, FT_Face &face)
 {
@@ -90,8 +90,9 @@ CharacterManager::CharacterManager()
 
 void CharacterManager::create(const char *file)
 {
-
-    camera = new OrthographicCamera(800, 600);
+    const float width = 800;
+    const float height = 600;
+    camera = new OrthographicCamera(width, height);
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -138,7 +139,7 @@ void CharacterManager::renderText(ShaderProgram *program, std::wstring &text, in
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glUniform3f(glGetUniformLocation(program->ID, "u_color"), color.x, color.y, color.z);
-    program->setUniformMat4("projection", camera->projection);
+    program->setUniformMat4("projection", camera->getProjectionMatrix());
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
