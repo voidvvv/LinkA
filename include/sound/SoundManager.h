@@ -13,13 +13,13 @@ class LinkA_Music
 {
 private:
     ALuint buffer;
-    ALuint currentSource;
+    // ALuint currentSource;
 
 public:
     virtual ALuint getBuffer();
-    virtual ALuint getCurrentSource();
+    // virtual ALuint getCurrentSource();
     virtual void setBuffer(ALuint);
-    virtual void setCurrentSource(ALuint);
+    // virtual void setCurrentSource(ALuint);
     virtual dispose();
 };
 

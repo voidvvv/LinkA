@@ -46,30 +46,43 @@ void Board::create()
     graph = new LinkCardAGraph();
     graph->create();
     std::vector<Card *> tmpVector;
-    int limit = (column * row) /2;
-    int obstacleNum = (column * row) % 2;
+    int base = column * row;
+    
+    int obstacleNum = (base % 2) + 3;
+    int limit = (base - obstacleNum) / 2;
+    obstacleNum += (base - obstacleNum) %2;
     for (int x = 0; x < limit; x++) {
         Card *tst = new Card();
-        int i = game->rand(0,limit-1) + 1;
+        int i = game->rand(0,3) + 1;
+        std::cout << "compareId: " << i << std::endl;
         tst->compare_id = i;
         tmpVector.push_back(tst);
+
         Card *tst2 = new Card();
         tst2->compare_id = i;
+
         tmpVector.push_back(tst2);
+    }
+    for (int x = 0; x < obstacleNum; x++) {
+        Card *tst = new Card();
+        tst->compare_id = 1;
+        tst->nodeType = LinkANodeType::OBSTACLE;
+        tmpVector.push_back(tst);
     }
     for (int x = 0; x < column * row; x++)
     {
-        Card *tst = new Card();
+        int ri = game->rand(0,tmpVector.size()-1);
+        auto curIt = tmpVector.begin() + ri;
+        
+        Card *tst = *curIt;   
+        tmpVector.erase(curIt);
         int x_pos = x % column;
         int y_pos = x / column;
         tst->x = x_pos;
         tst->y = y_pos;
         tst->index = x;
-        tst->compare_id = x%4 +1;
-        if (x_pos == y_pos)
-        {
-            tst->nodeType = LinkANodeType::OBSTACLE;
-        }
+        // tst->compare_id = x%4 +1;
+
         tst->create();
         // std::shared_ptr<Card> ptr(tst);
         // ptrMapping[tst] = ptr;

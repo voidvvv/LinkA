@@ -5,6 +5,14 @@
 
 void LinkAGame::create()
 {
+        // rand seed
+    // srand(std::time(NULL));
+    
+    std::random_device seedDevice;
+    this->seed = seedDevice();
+    this->randomEngine = new std::ranlux48(this->seed);
+    std::cout << "Game init with seed: " << seed << std::endl;
+    LinkALog->info("Game init with seed: " + std::to_string(seed));
     contro = new InputEvent();
     assetManager = new AssetManager();
     textManager = new CharacterManager();
@@ -24,12 +32,7 @@ void LinkAGame::create()
     basicRender->initialData();
     setScreen(new MainScreen());
 
-    // rand seed
-    // srand(std::time(NULL));
-    std::random_device seedDevice;
-    this->seed = seedDevice();
-    std::cout << "Game init with seed: " << seed << std::endl;
-    LinkALog->info("Game init with seed: " + std::to_string(seed));
+
 }
 
 InputEvent *LinkAGame::getInputEvent() { return contro; }
@@ -88,7 +91,7 @@ void LinkAGame::resize(GLint& w, GLint& h)
 }
 
 RANDOM_NUM LinkAGame::rand(RANDOM_NUM min, RANDOM_NUM max) {
-    std::ranlux48 engine(this->seed);
+    
     std::uniform_int_distribution<> distrib(min, max);
-    return distrib(engine);//随机数
+    return distrib(*(this->randomEngine));//随机数
 }

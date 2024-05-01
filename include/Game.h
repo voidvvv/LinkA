@@ -21,7 +21,7 @@ public:
     int status;
     // std::random_device randSeed;
     unsigned int seed;
-    
+    std::ranlux48* randomEngine;
 
     virtual void setScreen(Screen*) = 0;
     virtual AssetManager* getAssetManager() = 0;

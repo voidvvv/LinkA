@@ -62,35 +62,32 @@ void SoundPlayer::create()
 }
 void SoundPlayer::play(_MUSIC_ *music)
 {
-    if (music->getCurrentSource() > 0)
-    {
-        playSource(music->getCurrentSource());
-    }
-    else if (sourceList.size() > 0)
-    {
-        bindMusic(music);
-        playSource(music->getCurrentSource());
-    }
-    else
-    {
-        // do nothing, may be add to a queue
-    }
+    // try to find a usable source
+    if (sourceList.size() == 0)
+        return;
+    ALuint source = sourceList.back();
+    sourceList.pop_back();
+    runningSource[source] = music;
+    alSourcei(source, AL_BUFFER, music->getBuffer());
+    playSource(source);
 }
 
 void SoundPlayer::playBgm(_MUSIC_ *music)
 {
-    if (music->getCurrentSource() != bgmSource)
-    {
-        stopSource(music->getCurrentSource());
-        if (music->getCurrentSource() > 0) {
-            sourceList.push_back(music->getCurrentSource());
-        }
+    // if (music->getCurrentSource() != bgmSource)
+    // {
+    //     stopSource(music->getCurrentSource());
+    //     if (music->getCurrentSource() > 0)
+    //     {
+    //         sourceList.push_back(music->getCurrentSource());
+    //     }
 
-        music->setCurrentSource(bgmSource);
-        stopSource(bgmSource);
+    //     // music->setCurrentSource(bgmSource);
+    //     stopSource(bgmSource);
 
-        alSourcei(bgmSource, AL_BUFFER, music->getBuffer());
-    }
+    //     alSourcei(bgmSource, AL_BUFFER, music->getBuffer());
+    // }
+    alSourcei(bgmSource, AL_BUFFER, music->getBuffer());
     forcePlaySource(bgmSource);
 }
 
@@ -108,7 +105,7 @@ void SoundPlayer::update()
         if (loopState == AL_FALSE && (state == AL_STOPPED))
         {
             _MUSIC_ *music = (*it).second;
-            music->setCurrentSource(0);
+            // music->setCurrentSource(0);
 
             it = runningSource.erase(it);
             alSourcei(source, AL_BUFFER, 0);
@@ -125,12 +122,12 @@ void SoundPlayer::update()
 void SoundPlayer::bindMusic(_MUSIC_ *music)
 {
     if (sourceList.size() == 0)
-        return ;
+        return;
     ALuint source = sourceList.back();
     sourceList.pop_back();
     runningSource[source] = music;
     alSourcei(source, AL_BUFFER, music->getBuffer());
-    music->setCurrentSource(source);
+    // music->setCurrentSource(source);
 }
 
 ALuint LinkA_Music::getBuffer()
@@ -138,21 +135,22 @@ ALuint LinkA_Music::getBuffer()
     return this->buffer;
 }
 
-ALuint LinkA_Music::getCurrentSource()
-{
-    return this->currentSource;
-}
+// ALuint LinkA_Music::getCurrentSource()
+// {
+//     return this->currentSource;
+// }
 
-void LinkA_Music::setBuffer(ALuint buffer) {
+void LinkA_Music::setBuffer(ALuint buffer)
+{
     this->buffer = buffer;
 }
-void LinkA_Music::setCurrentSource(ALuint currentSource)
-{
-    this->currentSource = currentSource;
-}
+// void LinkA_Music::setCurrentSource(ALuint currentSource)
+// {
+//     this->currentSource = currentSource;
+// }
 
 LinkA_Music::dispose()
 {
-    stopSource(this->currentSource);
-    alDeleteBuffers(1,&this->buffer);
+    // stopSource(this->currentSource);
+    alDeleteBuffers(1, &this->buffer);
 }
