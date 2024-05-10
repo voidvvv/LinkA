@@ -4,6 +4,8 @@
 #include "AssetManager.h"
 #include "TextApplication.h"
 
+#include <stack>
+
 
 class LinkAGame : public Game
 {
@@ -15,7 +17,7 @@ private:
 
 public:
     Screen *scn;
-
+    std::stack<Screen *> screen_stack;
     AssetManager *assetManager;
 
     void create() override;
@@ -25,6 +27,7 @@ public:
     AssetManager *getAssetManager() override;
     void renderText(std::wstring &, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) override;
     void setScreen(Screen *) override;
+    void replaceScreen(Screen *) ;
     SpriteRender *getSpriteRender() override;
     BasicRender * getBasicRender() override;
     void sendEvent(LinkA_Event &event) override;

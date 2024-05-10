@@ -5,9 +5,9 @@
 
 void LinkAGame::create()
 {
-        // rand seed
+    // rand seed
     // srand(std::time(NULL));
-    
+
     std::random_device seedDevice;
     this->seed = seedDevice();
     this->randomEngine = new std::ranlux48(this->seed);
@@ -31,8 +31,6 @@ void LinkAGame::create()
     renderer->initRenderData();
     basicRender->initialData();
     setScreen(new MainScreen());
-
-
 }
 
 InputEvent *LinkAGame::getInputEvent() { return contro; }
@@ -60,6 +58,18 @@ void LinkAGame::renderText(std::wstring &str, GLfloat x, GLfloat y, GLfloat scal
 
 void LinkAGame::setScreen(Screen *newScn)
 {
+    
+    if (this->scn != nullptr)
+    {
+        // std::cout << scn << std::endl;
+        this->screen_stack.push(this->scn);
+    }
+    this->scn = newScn;
+    newScn->create();
+}
+
+void LinkAGame::replaceScreen(Screen * newScn)
+{
     if (this->scn != nullptr)
     {
         // std::cout << scn << std::endl;
@@ -84,14 +94,15 @@ void LinkAGame::sendEvent(LinkA_Event &event)
     scn->sendEvent(event);
 }
 
-void LinkAGame::resize(GLint& w, GLint& h)
+void LinkAGame::resize(GLint &w, GLint &h)
 {
     this->ScreenWidth = w;
     this->ScreenHeight = h;
 }
 
-RANDOM_NUM LinkAGame::rand(RANDOM_NUM min, RANDOM_NUM max) {
-    
+RANDOM_NUM LinkAGame::rand(RANDOM_NUM min, RANDOM_NUM max)
+{
+
     std::uniform_int_distribution<> distrib(min, max);
-    return distrib(*(this->randomEngine));//随机数
+    return distrib(*(this->randomEngine)); // 随机数
 }

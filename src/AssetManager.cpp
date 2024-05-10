@@ -3,7 +3,7 @@
 Texture *AssetManager::loadTexture(const char *path, std::string name)
 {
     if (textureMap[name] != NULL) {
-        delete textureMap[name];
+        return textureMap[name];
     }
     textureMap[name] = new Texture(path);
     return textureMap[name];
@@ -12,12 +12,18 @@ Texture *AssetManager::loadTexture(const char *path, std::string name)
 ShaderProgram *AssetManager::loadShader(const char *vertPath, const char *fragPath, std::string name)
 {
     std::cout<<"load shader!"<<std::endl;
+    if (shaderMap[name] != NULL) {
+        return shaderMap[name];
+    }
     shaderMap[name] = new ShaderProgram(vertPath, fragPath);
     return shaderMap[name];
 }
 
 _MUSIC_ *AssetManager::loadMusic(const char *filePath, std::string name)
 {
+    if (musicMap[name] != NULL) {
+        return musicMap[name];
+    }
     _MUSIC_ * music = musicLoader.loadMusicFromFile(filePath);
     if (music!=nullptr){
         musicMap[name] = music;

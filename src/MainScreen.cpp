@@ -55,7 +55,7 @@ void MainScreen::create()
     board = new Board();
     board->create();
 
-    _CardRecipient *main_recipient = new _CardRecipient();
+    main_recipient = new _CardRecipient();
     main_recipient->outer = this;
     events->registListerner(_CARD_SELECTED, main_recipient);
     // _CARD_SUCCESS_MATCH_GLOBAL
@@ -92,6 +92,8 @@ void MainScreen::update(float delta)
 
 void MainScreen::dispose()
 {
+    board->dispose();
+    delete board;
 }
 
 void MainScreen::sendEvent(LinkA_Event &event)

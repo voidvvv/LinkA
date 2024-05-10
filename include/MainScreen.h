@@ -17,8 +17,15 @@
 
 class MainScreen : public Screen
 {
+    class _CardRecipient : public _Recipient
+    {
+    public:
+        MainScreen *outer;
+        virtual bool handleMessage(_LinkAMessage &msg);
+    };
+
 private:
-// UI
+    // UI
     std::wstring s;
     std::wstring title;
     int score;
@@ -27,23 +34,16 @@ private:
     glm::vec3 tmpV;
     Camera *camera;
     Board *board;
-
-
+    _CardRecipient *main_recipient;
+    ;
 
 public:
-    class _CardRecipient : public _Recipient
-    {
-    public:
-        MainScreen *outer;
-        virtual bool handleMessage(_LinkAMessage &msg);
-    };
     MainScreen();
     void create();
     void render();
     void update(float delta);
     void dispose();
     void sendEvent(LinkA_Event &event);
-
 };
 
 #endif // __MAINSCREEN_H__
